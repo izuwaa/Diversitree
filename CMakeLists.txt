@@ -38,7 +38,7 @@ set(HEADERS_FILES
         ${SRC}/resultWriter.h
         ${SRC}/solutionsGenerator.h
         ${SRC}/solutionStoreMap.h
-	${SRC}/solutionsStoreVector.h
+	${SRC}/solutionStoreVector.h
 	${SRC}/utilities.h
         )
 
@@ -53,7 +53,7 @@ set(SOURCE_FILES
         ${SRC}/resultWriter.cpp
         ${SRC}/solutionsGenerator.cpp
         ${SRC}/solutionStoreMap.cpp
-	${SRC}/solutionsStoreVector.cpp
+	${SRC}/solutionStoreVector.cpp
 	${SRC}/utilities.cpp
         )
 
