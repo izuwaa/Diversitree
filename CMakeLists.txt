@@ -11,7 +11,7 @@ else()
 endif()
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}")
-find_package(GMP REQUIRED)
+#find_package(GMP REQUIRED)
 
 include_directories(${GMP_INCLUDE_DIR})
 include_directories(${SCIP_INCLUDE_DIRS})
