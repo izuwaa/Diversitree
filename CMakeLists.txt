@@ -34,7 +34,7 @@ set(HEADERS_FILES
         ${SRC}/diversitreenode.h
         ${SRC}/diversityCalculator.h
         ${SRC}/oneTreeGams.h
-        ${SRC}/optiooonsReader.h
+        ${SRC}/optionsReader.h
         ${SRC}/resultWriter.h
         ${SRC}/solutionsGenerator.h
         ${SRC}/solutionStoreMap.h
@@ -49,7 +49,7 @@ set(SOURCE_FILES
         ${SRC}/diversitreenode.cpp
         ${SRC}/diversityCalculator.cpp
         ${SRC}/oneTreeGams.cpp
-        ${SRC}/optiooonsReader.cpp
+        ${SRC}/optionsReader.cpp
         ${SRC}/resultWriter.cpp
         ${SRC}/solutionsGenerator.cpp
         ${SRC}/solutionStoreMap.cpp
