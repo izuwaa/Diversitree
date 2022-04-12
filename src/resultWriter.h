@@ -12,6 +12,7 @@
 #include <fstream>
 #include <vector>
 #include <map>
+#include <iomanip>
 #include "currentStateVariables.h"
 #include "solutionStoreMap.h"
 
