@@ -1,0 +1,29 @@
+#!/bin/bash
+#
+#PBS -N 2p2p10p0548
+#PBS -M iahanor@vols.utk.edu
+#PBS -m abe
+#PBS -A ACF-UTK0011
+#PBS -o /lustre/haven/user/iahanor/branchandbound/Train/2p/2p10p0548O.txt
+#PBS -e /lustre/haven/user/iahanor/branchandbound/Train/2p/2p10p0548E.txt
+#PBS -l walltime=24:00:00
+#PBS -l nodes=1:ppn=4
+#PBS -l partition=gpu
+#PBS -l feature=cascadelake_gpu
+
+cd /lustre/haven/user/iahanor/branchandbound/Train/2p
+mkdir 2p10p0548F
+cd 2p10p0548F
+
+git clone https://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@github.com/izuwaa/Diversitree.git
+cd Diversitree
+module load gcc/6.3.0
+module load cmake
+
+cmake -Bbuild -H. -DSCIP_DIR=/lustre/haven/user/iahanor/branchandbound/scipoptsuite-7.0.3/installDir/lib/cmake/scip -DGMP_INCLUDE_DIR=/sw/cs400_centos7.3_acfsoftware/gmp/5.1.1/centos7.3_intel17.2.174/include
+cmake --build build
+echo "module loaded"
+
+cd /lustre/haven/user/iahanor/branchandbound/Train/2p/2p10p0548F/Diversitree
+/lustre/haven/user/iahanor/branchandbound/Train/2p/2p10p0548F/Diversitree/build/diversitree 2p10p0548.txt problemOptions , solverParams.txt solverOptions :
+echo "module I am done"
