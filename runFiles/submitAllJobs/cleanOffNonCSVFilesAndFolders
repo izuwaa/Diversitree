@@ -1,0 +1,31 @@
+#!/bin/bash
+echo "Deleting all non CSV Files"
+find . -type f ! -iname "*.csv" -delete
+echo "Completed the non csv file deleting"
+echo "Deleting all Folders Called TestSet-BFS"
+find . -type d -name "TestSet-BFS" -exec rm -rf {} +
+echo "Completed deleting all Folders Called TestSet-BFS"
+echo "Deleting all Folders Called bin"
+find . -type d -name "bin" -exec rm -rf {} +
+echo "Completed deleting all Folders Called bin"
+echo "Deleting all Folders Called build"
+find . -type d -name "build" -exec rm -rf {} +
+echo "Completed deleting all Folders Called build"
+echo "Deleting all Folders Called cplexOptions"
+find . -type d -name "cplexOptions" -exec rm -rf {} +
+echo "Completed deleting all Folders Called cplexOptions"
+echo "Deleting all Folders Called gmsFiles"
+find . -type d -name "gmsFiles" -exec rm -rf {} +
+echo "Completed deleting all Folders Called gmsFiles"
+echo "Deleting all Folders Called mpsFiles"
+find . -type d -name "mpsFiles" -exec rm -rf {} +
+echo "Completed deleting all Folders Called mpsFiles"
+echo "Deleting all Folders Called obj"
+find . -type d -name "obj" -exec rm -rf {} +
+echo "Completed deleting all Folders Called obj"
+echo "Deleting all Folders Called runFiles"
+find . -type d -name "runFiles" -exec rm -rf {} +
+echo "Completed deleting all Folders Called runFiles"
+echo "Deleting all Folders Called src"
+find . -type d -name "src" -exec rm -rf {} +
+echo "Completed deleting all Folders Called src"
