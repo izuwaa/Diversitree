@@ -1,0 +1,15 @@
+solver, SCIP
+nodeType, 1,5
+alphaValue, 0.9
+optimizationProblem, bell5.mps, blend2.mps, dcmulti.mps, egout.mps,fiber.mps, fixnet6.mps, gen.mps, gt2.mps, khb05250.mps, l152lav.mps, lseu.mps,misc03.mps,misc06.mps, mod008.mps, p0033.mps, p0201.mps, p0548.mps, pp08a.mps,pp08aCUTS.mps, rgn.mps, stein27.mps,stein45.mps,vpm1.mps,vpm2.mps
+requestedNumberSolutions, 10, 50, 100, 200, 1000
+percentNearOptimal, 0.10
+Verbosity, 1 
+beta, 0.04
+priorotizedParam, beta, #, The prioritized parameter is set at given value
+solutioncutoff, 0.8
+depthcutoff, 0
+computeDiversity, 0, #, 0 means compute the diversities of captured solutions 1 means write the captured solutions to .csv file
+computeDiversityFromCsv, 0, #, 0 means we DON'T Have a .csv file hence run GAMS or SCIP, 1 means we are given a .csv file with solutions hence just compute the diversity of the k most diverse solutions; k is represented by the parameter - requestedNumberSolutions
+csvFile,
+pMostDiverseSolutions, 10

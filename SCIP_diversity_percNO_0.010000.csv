@@ -1,0 +1,5 @@
+Problem,Alpha,Beta,DepthCut,NodesProcessed,NumSols,NumberofGeneratedSolutions,PercentNearOptimal,SolCut,Time(ms),diversity,nodeType
+bell5(100),0.100000,0.900000,0.000000,0,100,101,0.010000,0.200000,1382.643799,0.142918,DiversiTree
+bell5(100),0.000000,0.000000,0.000000,0,100,101,0.010000,0.000000,1482.130005,0.094668,bfsProblem,Alpha,Beta,DepthCut,NodesProcessed,NumSols,NumberofGeneratedSolutions,PercentNearOptimal,SolCut,Time(ms),diversity,nodeType
+dcmulti(100),0.100000,0.900000,0.000000,0,100,101,0.010000,0.200000,3101.025391,0.141424,DiversiTree
+dcmulti(100),0.000000,0.000000,0.000000,0,100,101,0.010000,0.000000,1883.876587,0.109835,bfs
