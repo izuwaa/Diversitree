@@ -312,7 +312,7 @@ static SCIP_DECL_NODESELFREE(nodeselFreediversitreenode)
 		/* free user data of node selector */
 		nodeseldata = SCIPnodeselGetData(nodesel);
 		assert(nodeseldata != NULL);
-		delete(nodeseldata->seen);
+//		delete(nodeseldata->seen);
 		SCIPfreeBlockMemory(scip, &nodeseldata);
 		SCIPnodeselSetData(nodesel, nodeseldata);
 

@@ -1,0 +1,13 @@
+Problem,Alpha,Beta,DepthCut,NodesProcessed,NumSols,NumberofGeneratedSolutions,PercentNearOptimal,SolCut,Time(ms),diversity,nodeType
+bell5(100),0.180000,0.800000,0.000000,0,100,101,0.010000,0.200000,1510.365967,0.143750,DiversiTree
+bell5(100),0.000000,0.000000,0.000000,0,100,101,0.010000,0.000000,1509.034790,0.094668,bfsProblem,Alpha,Beta,DepthCut,NodesProcessed,NumSols,NumberofGeneratedSolutions,PercentNearOptimal,SolCut,Time(ms),diversity,nodeType
+bell5(100),0.100000,0.900000,0.000000,0,100,101,0.010000,0.200000,1393.719482,0.142918,DiversiTree
+bell5(100),0.000000,0.000000,0.000000,0,100,101,0.010000,0.000000,1439.497070,0.094668,bfsProblem,Alpha,Beta,DepthCut,NodesProcessed,NumSols,NumberofGeneratedSolutions,PercentNearOptimal,SolCut,Time(ms),diversity,nodeType
+gen(100),0.100000,0.900000,0.000000,0,100,101,0.010000,0.200000,1622.524048,0.186345,DiversiTree
+gen(100),0.000000,0.000000,0.000000,0,100,101,0.010000,0.000000,354.115723,0.161944,bfsProblem,Alpha,Beta,DepthCut,NodesProcessed,NumSols,NumberofGeneratedSolutions,PercentNearOptimal,SolCut,Time(ms),diversity,nodeType
+gt2(100),0.100000,0.900000,0.000000,0,100,101,0.010000,0.200000,3329.037598,0.065727,DiversiTree
+gt2(100),0.000000,0.000000,0.000000,0,100,101,0.010000,0.000000,356.919678,0.064010,bfsProblem,Alpha,Beta,DepthCut,NodesProcessed,NumSols,NumberofGeneratedSolutions,PercentNearOptimal,SolCut,Time(ms),diversity,nodeType
+dcmulti(100),0.100000,0.900000,0.000000,0,100,101,0.010000,0.200000,3287.052490,0.141424,DiversiTree
+dcmulti(100),0.000000,0.000000,0.000000,0,100,101,0.010000,0.000000,1990.671997,0.109835,bfsProblem,Alpha,Beta,DepthCut,NodesProcessed,NumSols,NumberofGeneratedSolutions,PercentNearOptimal,SolCut,Time(ms),diversity,nodeType
+qnet1(100),0.100000,0.900000,0.000000,0,100,101,0.010000,0.200000,7299.930664,0.016705,DiversiTree
+qnet1(100),0.000000,0.000000,0.000000,0,100,101,0.010000,0.000000,1632.825439,0.007643,bfs
