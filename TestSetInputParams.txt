@@ -3,7 +3,7 @@ nodeType, 0,1
 alphaValue, 0.1
 optimizationProblem, bell5.mps,
 requestedNumberSolutions, 100
-percentNearOptimal, 0.09
+percentNearOptimal, 0.01
 Verbosity, 1
 beta, 0.9
 priorotizedParam, beta, #, The prioritized parameter is set at given value
