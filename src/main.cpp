@@ -162,6 +162,8 @@ int main(int argc, char **argv)
 																										currentState.setBetaValue(optReader.m_betaValue[beta]);
 																										currentState.setSolutioncutoff(optReader.m_solutioncutoff[solcut]);
 																										currentState.setDepthcutoff(optReader.m_depthcutoff[depthcut]);
+																										currentState.m_seenNodes.clear();
+																										currentState.m_seenNodesMap.clear();
 
 																										if (currentState.alphaValue() > 0 and (currentState.alphaValue() + currentState.betaValue()) > 1)
 																											{
@@ -180,8 +182,9 @@ int main(int argc, char **argv)
 																											{// We have a new alpha, beta, depthcut, solcut combination - start phase 2
 
 																												branchCountScip multiSolGenerator(optReader);
+
 																												solutionStoreVector generatedSolutions;// Holds the generated solutions
-																												multiSolGenerator.generateSolutionsFromMIP(generatedSolutions, currentState);
+																												multiSolGenerator.generateSolutionsFromMIP(generatedSolutions, &currentState);
 
 																												std::string csvFile = optimizationProblem + "_SCIP_" + std::string(currentState.getMNodeType()) + "_percNO_" + std::to_string(currentState.percentNearOptimal()) + "_reqNS_" + std::to_string(currentState.requestedNumberOfSolutions()) + "_alpha_" + std::to_string(currentState.alphaValue()) + "_beta_" + std::to_string(currentState.betaValue()) + "_solCut_" + std::to_string(currentState.solutioncutoff()) + "_depthCut_" + std::to_string(currentState.depthcutoff()) + ".csv";
 																												std::cout << "  Creating result file and storing it in: " << csvFile << " \n";
@@ -240,7 +243,7 @@ int main(int argc, char **argv)
 
 																		branchCountScip multiSolGenerator(optReader);
 																		solutionStoreVector generatedSolutions;// Holds the generated solutions
-																		multiSolGenerator.generateSolutionsFromMIP(generatedSolutions, currentState);
+																		multiSolGenerator.generateSolutionsFromMIP(generatedSolutions, &currentState);
 
 //																		std::string csvFile = optimizationProblem + "_SCIP" + "_percNO_" + std::to_string(currentState.percentNearOptimal()) + "_reqNS_" + std::to_string(currentState.requestedNumberOfSolutions()) + "_alpha_" + std::to_string(currentState.alphaValue()) + "_beta_" + std::to_string(currentState.betaValue()) + "_solCut_" + std::to_string(currentState.solutioncutoff()) + "_depthCut_" + std::to_string(currentState.depthcutoff()) + ".csv";
 																		std::string csvFile = optimizationProblem + "_SCIP_" + std::string(currentState.getMNodeType()) + "_percNO_" + std::to_string(currentState.percentNearOptimal()) + "_reqNS_" + std::to_string(currentState.requestedNumberOfSolutions()) + "_alpha_" + std::to_string(currentState.alphaValue()) + "_beta_" + std::to_string(currentState.betaValue()) + "_solCut_" + std::to_string(currentState.solutioncutoff()) + "_depthCut_" + std::to_string(currentState.depthcutoff()) + ".csv";
@@ -363,6 +366,8 @@ int main(int argc, char **argv)
 																										currentState.setBetaValue(optReader.m_betaValue[beta]);
 																										currentState.setSolutioncutoff(optReader.m_solutioncutoff[solcut]);
 																										currentState.setDepthcutoff(optReader.m_depthcutoff[depthcut]);
+																										currentState.m_seenNodes.clear();
+																										currentState.m_seenNodesMap.clear();
 
 																										if (currentState.alphaValue() > 0 and (currentState.alphaValue() + currentState.betaValue()) > 1)
 																											{
@@ -384,7 +389,7 @@ int main(int argc, char **argv)
 
 																												branchCountScip multiSolGenerator(optReader);
 																												solutionStoreVector generatedSolutions;// Holds the generated solutions
-																												multiSolGenerator.generateSolutionsFromMIP(generatedSolutions, currentState);
+																												multiSolGenerator.generateSolutionsFromMIP(generatedSolutions, &currentState);
 
 //																												std::string csvFile = optimizationProblem + "_SCIP_diversity" + "_percNO_" + std::to_string(currentState.percentNearOptimal()) + "_reqNS_" + std::to_string(currentState.requestedNumberOfSolutions()) + "_alpha_" + std::to_string(currentState.alphaValue()) + "_beta_" + std::to_string(currentState.betaValue()) + "_solCut_" + std::to_string(currentState.solutioncutoff()) + "_depthCut_" + std::to_string(currentState.depthcutoff()) + ".csv";
 																												std::string csvFile = std::string("SCIP_diversity") + std::string("_percNO_") + std::to_string(currentState.percentNearOptimal()) + std::string(".csv");
@@ -462,7 +467,7 @@ int main(int argc, char **argv)
 
 																		branchCountScip multiSolGenerator(optReader);
 																		solutionStoreVector generatedSolutions;// Holds the generated solutions
-																		multiSolGenerator.generateSolutionsFromMIP(generatedSolutions, currentState);
+																		multiSolGenerator.generateSolutionsFromMIP(generatedSolutions, &currentState);
 
 //																		std::string csvFile = optimizationProblem + "_SCIP_diversity" + "_percNO_" + std::to_string(currentState.percentNearOptimal()) + "_reqNS_" + std::to_string(currentState.requestedNumberOfSolutions()) + "_alpha_" + std::to_string(currentState.alphaValue()) + "_beta_" + std::to_string(currentState.betaValue()) + "_solCut_" + std::to_string(currentState.solutioncutoff()) + "_depthCut_" + std::to_string(currentState.depthcutoff()) + ".csv";
 																		std::string csvFile = std::string("SCIP_diversity") + std::string("_percNO_") + std::to_string(currentState.percentNearOptimal()) + std::string(".csv");

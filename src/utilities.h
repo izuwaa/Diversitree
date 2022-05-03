@@ -21,7 +21,7 @@ class utilities
 
 	};
 
-void setCurrentState(currentStateVariables &curState);
-currentStateVariables getCurrentState();
+//void setCurrentState(currentStateVariables &curState);
+//currentStateVariables getCurrentState();
 
 #endif /* UTILITIES_H_ */

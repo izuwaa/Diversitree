@@ -8,22 +8,22 @@
 #include "utilities.h"
 //#include "utilities.h"
 
-static currentStateVariables cState;
+//static currentStateVariables cState;
 
 utilities::utilities()
 {
-    std::cout << "Starting Utility tools .... \n";
+//    std::cout << "Starting Utility tools .... \n";
 }
 
 
 
-void setCurrentState(currentStateVariables &curState){
-		cState = curState;
-//		utilities::cState ;
-}
-currentStateVariables getCurrentState(){
-		return cState;
-}
+//void setCurrentState(currentStateVariables &curState){
+//		cState = curState;
+////		utilities::cState ;
+//}
+//currentStateVariables getCurrentState(){
+//		return cState;
+//}
 
 
 

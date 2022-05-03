@@ -26,7 +26,8 @@
 #include <algorithm>
 #include "branchCountScip.h"
 #include "optionsReader.h"
-#include "utilities.h"
+//#include "utilities.h"
+#include "currentStateVariables.h"
 //#include <chrono>
 
 
@@ -38,8 +39,17 @@ extern "C" {
  *
  *  @ingroup NodeSelectorIncludes
  */
+
+static currentStateVariables *cState;
+
+//static
+//void setCurrentState(currentStateVariables *currentState);
+//
+//static
+//currentStateVariables *getCurrentState();
+
 SCIP_EXPORT
-SCIP_RETCODE SCIPincludeDiversitreeBfs(SCIP *scip /**< SCIP data structure */
+SCIP_RETCODE SCIPincludeDiversitreeBfs(SCIP *scip /**< SCIP data structure */, currentStateVariables *currentState
 );
 
 //#ifdef __cplusplus

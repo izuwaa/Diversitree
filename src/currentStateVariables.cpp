@@ -236,22 +236,22 @@ const std::string& currentStateVariables::getMNodeType() const
 
 
 
-float currentStateVariables::getMCountedSolutionsSoFar() const
+int currentStateVariables::getMCountedSolutionsSoFar()
 	{
 		return m_countedSolutionsSoFar;
 	}
 
-void currentStateVariables::setMCountedSolutionsSoFar(float mCountedSolutionsSoFar)
+void currentStateVariables::setMCountedSolutionsSoFar(int mCountedSolutionsSoFar)
 	{
 		m_countedSolutionsSoFar = mCountedSolutionsSoFar;
 	}
 
-float currentStateVariables::getMMaxTreeDepthSoFar() const
+int currentStateVariables::getMMaxTreeDepthSoFar()
 	{
 		return m_maxTreeDepthSoFar;
 	}
 
-void currentStateVariables::setMMaxTreeDepthSoFar(float mMaxTreeDepthSoFar)
+void currentStateVariables::setMMaxTreeDepthSoFar(int mMaxTreeDepthSoFar)
 	{
 		m_maxTreeDepthSoFar = mMaxTreeDepthSoFar;
 	}
@@ -281,6 +281,29 @@ void currentStateVariables::setMObjectiveCalculated(int mObjectiveCalculated)
 	{
 		m_objectiveCalculated = mObjectiveCalculated;
 	}
+
+
+const std::unordered_set<int>& currentStateVariables::getMSeenNodes() const
+	{
+		return m_seenNodes;
+	}
+
+void currentStateVariables::setMSeenNodes(const std::unordered_set<int> &mSeenNodes)
+	{
+		m_seenNodes = mSeenNodes;
+	}
+
+const std::map<int, float>& currentStateVariables::getMSeenNodesMap() const
+	{
+		return m_seenNodesMap;
+	}
+
+void currentStateVariables::setMSeenNodesMap(std::map<int, float> &mSeenNodesMap)
+	{
+		m_seenNodesMap = mSeenNodesMap;
+	}
+
+
 
 currentStateVariables::currentStateVariables()
 	{
@@ -314,8 +337,12 @@ currentStateVariables::currentStateVariables()
 
 		currentStateVariables::m_bestObjective = 0;
 		currentStateVariables::m_objectiveCalculated = 0;
+
 		currentStateVariables::m_bestSolutionValues.clear();
+		currentStateVariables::m_seenNodesMap.clear();
+		currentStateVariables::m_seenNodes.clear();
 		currentStateVariables::m_seenValues.clear();
+
 		currentStateVariables::m_countedSolutionsSoFar = 0;
 		currentStateVariables::m_maxTreeDepthSoFar = 0;
 

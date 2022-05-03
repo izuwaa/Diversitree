@@ -45,9 +45,12 @@ class currentStateVariables
 		int m_objectiveCalculated;
 		std::vector<std::string> m_bestSolutionValues;
 		std::unordered_set<std::string> m_seenValues;
-		float m_countedSolutionsSoFar;
-		float m_maxTreeDepthSoFar;
+		int m_countedSolutionsSoFar;
+		int m_maxTreeDepthSoFar;
 		solutionStoreVector solutionPool;
+
+		std::unordered_set<int> m_seenNodes;
+		std::map<int,float> m_seenNodesMap;
 
 
 		currentStateVariables();
@@ -104,12 +107,19 @@ class currentStateVariables
 		void setMBestSolutionValues(const std::vector<std::string> &mBestSolutionValues);
 		const std::string& getMNodeType() const;
 		void setMNodeType(const std::string &mNodeType);
-		float getMCountedSolutionsSoFar() const;
-		void setMCountedSolutionsSoFar(float mCountedSolutionsSoFar);
-		float getMMaxTreeDepthSoFar() const;
-		void setMMaxTreeDepthSoFar(float mMaxTreeDepthSoFar);
+		int getMCountedSolutionsSoFar();
+		void setMCountedSolutionsSoFar(int mCountedSolutionsSoFar);
+		int getMMaxTreeDepthSoFar();
+		void setMMaxTreeDepthSoFar(int mMaxTreeDepthSoFar);
 		const solutionStoreVector& getSolutionPool() const;
 		void setSolutionPool(const solutionStoreVector &solutionPool);
+
+		const std::unordered_set<int>& getMSeenNodes() const;
+		void setMSeenNodes(const std::unordered_set<int> &mSeenNodes);
+
+		const std::map<int, float>& getMSeenNodesMap() const;
+		void setMSeenNodesMap(std::map<int, float> &mSeenNodesMap);
+
 	};
 
 #endif /* SRC_CURRENTSTATEVARIABLES_H_ */
