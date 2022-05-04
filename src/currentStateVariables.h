@@ -49,8 +49,8 @@ class currentStateVariables
 		int m_maxTreeDepthSoFar;
 		solutionStoreVector solutionPool;
 
-		std::unordered_set<int> m_seenNodes;
-		std::map<int,float> m_seenNodesMap;
+//		std::unordered_set<int> m_seenNodes;
+//		std::map<int,float> m_seenNodesMap;
 
 
 		currentStateVariables();
@@ -114,11 +114,11 @@ class currentStateVariables
 		const solutionStoreVector& getSolutionPool() const;
 		void setSolutionPool(const solutionStoreVector &solutionPool);
 
-		const std::unordered_set<int>& getMSeenNodes() const;
-		void setMSeenNodes(const std::unordered_set<int> &mSeenNodes);
-
-		const std::map<int, float>& getMSeenNodesMap() const;
-		void setMSeenNodesMap(std::map<int, float> &mSeenNodesMap);
+//		const std::unordered_set<int>& getMSeenNodes() const;
+//		void setMSeenNodes(const std::unordered_set<int> &mSeenNodes);
+//
+//		const std::map<int, float>& getMSeenNodesMap() const;
+//		void setMSeenNodesMap(std::map<int, float> &mSeenNodesMap);
 
 	};
 

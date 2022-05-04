@@ -283,25 +283,25 @@ void currentStateVariables::setMObjectiveCalculated(int mObjectiveCalculated)
 	}
 
 
-const std::unordered_set<int>& currentStateVariables::getMSeenNodes() const
-	{
-		return m_seenNodes;
-	}
-
-void currentStateVariables::setMSeenNodes(const std::unordered_set<int> &mSeenNodes)
-	{
-		m_seenNodes = mSeenNodes;
-	}
-
-const std::map<int, float>& currentStateVariables::getMSeenNodesMap() const
-	{
-		return m_seenNodesMap;
-	}
-
-void currentStateVariables::setMSeenNodesMap(std::map<int, float> &mSeenNodesMap)
-	{
-		m_seenNodesMap = mSeenNodesMap;
-	}
+//const std::unordered_set<int>& currentStateVariables::getMSeenNodes() const
+//	{
+//		return m_seenNodes;
+//	}
+//
+//void currentStateVariables::setMSeenNodes(const std::unordered_set<int> &mSeenNodes)
+//	{
+//		m_seenNodes = mSeenNodes;
+//	}
+//
+//const std::map<int, float>& currentStateVariables::getMSeenNodesMap() const
+//	{
+//		return m_seenNodesMap;
+//	}
+//
+//void currentStateVariables::setMSeenNodesMap(std::map<int, float> &mSeenNodesMap)
+//	{
+//		m_seenNodesMap = mSeenNodesMap;
+//	}
 
 
 
@@ -339,8 +339,8 @@ currentStateVariables::currentStateVariables()
 		currentStateVariables::m_objectiveCalculated = 0;
 
 		currentStateVariables::m_bestSolutionValues.clear();
-		currentStateVariables::m_seenNodesMap.clear();
-		currentStateVariables::m_seenNodes.clear();
+//		currentStateVariables::m_seenNodesMap.clear();
+//		currentStateVariables::m_seenNodes.clear();
 		currentStateVariables::m_seenValues.clear();
 
 		currentStateVariables::m_countedSolutionsSoFar = 0;

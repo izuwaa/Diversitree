@@ -162,8 +162,8 @@ int main(int argc, char **argv)
 																										currentState.setBetaValue(optReader.m_betaValue[beta]);
 																										currentState.setSolutioncutoff(optReader.m_solutioncutoff[solcut]);
 																										currentState.setDepthcutoff(optReader.m_depthcutoff[depthcut]);
-																										currentState.m_seenNodes.clear();
-																										currentState.m_seenNodesMap.clear();
+//																										currentState.m_seenNodes.clear();
+//																										currentState.m_seenNodesMap.clear();
 
 																										if (currentState.alphaValue() > 0 and (currentState.alphaValue() + currentState.betaValue()) > 1)
 																											{
@@ -366,8 +366,8 @@ int main(int argc, char **argv)
 																										currentState.setBetaValue(optReader.m_betaValue[beta]);
 																										currentState.setSolutioncutoff(optReader.m_solutioncutoff[solcut]);
 																										currentState.setDepthcutoff(optReader.m_depthcutoff[depthcut]);
-																										currentState.m_seenNodes.clear();
-																										currentState.m_seenNodesMap.clear();
+//																										currentState.m_seenNodes.clear();
+//																										currentState.m_seenNodesMap.clear();
 
 																										if (currentState.alphaValue() > 0 and (currentState.alphaValue() + currentState.betaValue()) > 1)
 																											{
