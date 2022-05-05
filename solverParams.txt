@@ -1,8 +1,0 @@
-gamsWorkingDirectory:/Library/Frameworks/GAMS.framework/Versions/38/Resources/apifiles/C++/IzuwaTest/tGams/testGAMS
-gamsSystemDirectory:/Library/Frameworks/GAMS.framework/Versions/38/Resources
-gamsOptDirectory:/Library/Frameworks/GAMS.framework/Versions/38/Resources/apifiles/C++/IzuwaTest/tGams/testGAMS/cplexOptions
-gamsGMSFileDirectory:/Library/Frameworks/GAMS.framework/Versions/38/Resources/apifiles/C++/IzuwaTest/tGams/testGAMS/gmsFiles
-scipWorkingDirectory:
-scipSystemDirectory:
-scipOptDirectory:
-scipMPSFileDirectory:mpsFiles
