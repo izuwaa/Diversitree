@@ -40,8 +40,8 @@ extern "C" {
  *  @ingroup NodeSelectorIncludes
  */
 
-static currentStateVariables cState;
-static std::map<int,float> nodeVisits;
+static currentStateVariables *cState;
+static std::vector<float> nodeVisits;
 
 //static
 //void setCurrentState(currentStateVariables *currentState);
@@ -50,7 +50,7 @@ static std::map<int,float> nodeVisits;
 //currentStateVariables *getCurrentState();
 
 SCIP_EXPORT
-SCIP_RETCODE SCIPincludeDiversitreeBfs(SCIP *scip /**< SCIP data structure */, currentStateVariables &currentState
+SCIP_RETCODE SCIPincludeDiversitreeBfs(SCIP *scip /**< SCIP data structure */, currentStateVariables *currentState
 );
 
 //#ifdef __cplusplus

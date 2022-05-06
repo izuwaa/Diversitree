@@ -66,7 +66,7 @@ struct SCIP_NodeselData
 		 *   (-1 for dynamic setting) */
 
 		//		float* nodeDiversities;      /**< array to store the diversity of each node as it is visited */
-//		int sizeNodeDiversities;     /**< the size of the nodeDiversities array */
+		int sizeNodeDiversities;     /**< the size of the nodeDiversities array */
 
 		//		int*                  nodevisits;         /**< array to store the number of node visits so far for every node */
 		//		int actualSizeNodeDiversities;     /**< the actual number of nodes seen so far */
@@ -90,7 +90,7 @@ float nodeGetDiversity(
 )
 	{
 		int nodenumber;
-		float result;
+//		float result = 999.0;
 
 		assert(nodeseldata != NULL);
 		assert(node != NULL);
@@ -102,30 +102,19 @@ float nodeGetDiversity(
 		//		printf("looking for node %d :", nodenumber);
 
 		//		if (nodenumber > nodeseldata->actualSizeNodeDiversities){
-//		if (nodenumber >= nodeseldata->sizeNodeDiversities){
-//		if (nodenumber >= nodeVisits.size()){
-//				//				printf("Didn't find node %d and result is %f : \n \n", nodenumber, result);
-//				return JUSTCREATED;
-//		}else{
-//				//				result  = nodeseldata->seen[nodenumber];
-////				result  = nodeVisits[nodenumber];
-//				//				printf("Found node %d and result is %f :", nodenumber, result);
-//				//				return nodeseldata->seen->at(nodenumber);
-//				//				return nodeseldata->seen[nodenumber];
-//				return nodeVisits.at(nodenumber);
-//				//				return result;
-//		}
-
-		try{
-				result = nodeVisits.at(nodenumber);
+		if (nodenumber >= nodeseldata->sizeNodeDiversities){
+				//				printf("Didn't find node %d and result is %f : \n \n", nodenumber, result);
+				return JUSTCREATED;
+		}else{
+				//				result  = nodeseldata->seen[nodenumber];
+//				result  = nodeVisits[nodenumber];
+				//				printf("Found node %d and result is %f :", nodenumber, result);
+				//				return nodeseldata->seen->at(nodenumber);
+				//				return nodeseldata->seen[nodenumber];
+//				printf("looking for node %d :-: %d :-: %d \n :", nodenumber, nodeVisits.size(), nodeseldata->sizeNodeDiversities);
+				return nodeVisits.at(nodenumber);
+				//				return result;
 		}
-		catch(...){
-				nodeVisits[nodenumber] = JUSTCREATED;
-				result = JUSTCREATED;
-
-		}
-
-		return result;
 
 	}
 
@@ -160,15 +149,10 @@ void updateNodeDiversity(
 		//		auto const result = nodeseldata->seen.insert(std::make_pair(nodenumber, 0));
 		//		if (not result.second) { result.first->second = 0; }
 
-//		if( nodenumber < nodeseldata->sizeNodeDiversities ){
-//		if( nodenumber < nodeVisits.size() ){
-//
-//				//				nodeseldata->seen[nodenumber] = diversity;
-//				nodeVisits[nodenumber] = diversity;
-//		}
-
-		nodeVisits[nodenumber] = diversity;
-
+		if( nodenumber < nodeseldata->sizeNodeDiversities ){
+				//				nodeseldata->seen[nodenumber] = diversity;
+				nodeVisits.at(nodenumber) = diversity;
+		}
 		//		try{
 		//				//				nodeseldata->seen->at(nodenumber) = diversity;
 		//				nodeseldata->seen[nodenumber] = diversity;
@@ -181,72 +165,66 @@ void updateNodeDiversity(
 
 	}
 
-///** keeps visits array large enough to save visits for all nodes in the branch and bound tree */
-//static
-//SCIP_RETCODE expandMemorySize(
-//		SCIP*                 scip,               /**< SCIP data structure */
-//		SCIP_NODESELDATA*     nodeseldata         /**< node selector data */
-//)
-//	{
-//		assert(nodeseldata != NULL);
-//
-//		/* if array has not been allocated yet, do this now with default initial capacity */
-//		//		if( nodeseldata->sizeNodeDiversities == 0 )
-//		//		if( nodeseldata->seen == NULL or nodeseldata->sizeNodeDiversities == 0 )
-//		if( nodeVisits.size() == 0)
-//			{
-//				//				SCIP_CALL( SCIPallocClearMemoryArray(scip, &nodeseldata->nodeDiversities, INITIALSIZE) ); /*lint !e506*/
-//				//				nodeseldata->seen = new std::vector<float>(INITIALSIZE,JUSTCREATED);
-//				//				nodeseldata->sizeNodeDiversities = INITIALSIZE;
-//
-//				//				SCIP_CALL( SCIPallocClearMemoryArray(scip, &nodeseldata->seen, INITIALSIZE) ); /*lint !e506*/
-////				nodeseldata->sizeNodeDiversities = INITIALSIZE;
-//				std::vector<float> temp1(INITIALSIZE,JUSTCREATED);
-//				nodeVisits = temp1;
-//				temp1.clear();
-////				std::fill_n(std::back_inserter(nodeVisits), INITIALSIZE, JUSTCREATED);
-//
-//				//				for (int i = 0; i< INITIALSIZE; ++i){
-//				//						nodeseldata->seen[i] = JUSTCREATED;
-//				//				}
-//
-//			}
-//
-//		//				assert(nodeseldata->nodelimit >= SCIPgetNNodes(scip));
-//
-//		/* if user node limit has not been reached yet, resize the visits array if necessary */
-//		//		if( nodeseldata->sizeNodeDiversities < (int)(2 * SCIPgetNNodes(scip)))
-////		if( nodeseldata->sizeNodeDiversities < (int)(2 * SCIPgetNNodes(scip)))
-//		if( nodeVisits.size() < (int)(2 * SCIPgetNNodes(scip)))
-//			{
-//				int newcapacity;
-////				newcapacity = MIN(2 * nodeseldata->sizeNodeDiversities, MAXNODELIMIT);
-//				newcapacity = MIN(2 * nodeVisits.size(), MAXNODELIMIT);
-//
-////				printf( "Resizing node visits array, old capacity: %d new capacity : %d\n", nodeseldata->sizeNodeDiversities, newcapacity);
-//				printf( "Resizing node visits array, old capacity: %d new capacity : %d\n", nodeVisits.size(), newcapacity);
-////				assert(newcapacity > nodeseldata->sizeNodeDiversities);
-//				assert(newcapacity > nodeVisits.size());
-//
-//				//				SCIP_CALL( SCIPreallocMemoryArray(scip, &nodeseldata->seen, newcapacity) );
-//				//				BMSclearMemoryArray(&(nodeseldata->seen[nodeseldata->sizeNodeDiversities]), newcapacity - nodeseldata->sizeNodeDiversities); /*lint !e866*/
-//
-////				std::vector<float> temp2 (newcapacity - nodeseldata->sizeNodeDiversities, JUSTCREATED);
-//				std::vector<float> temp2 (newcapacity - nodeVisits.size(), JUSTCREATED);
-//				nodeVisits.reserve(nodeVisits.size()+temp2.size()); // Reserve space first
-//				nodeVisits.insert(nodeVisits.end(),temp2.begin(),temp2.end());
-//
-//				temp2.clear();
-//
-//				//				for (int i = nodeseldata->sizeNodeDiversities; i< newcapacity; ++i){
-//				//						nodeseldata->seen[i] = JUSTCREATED;
-//				//				}
-//
-////				nodeseldata->sizeNodeDiversities = newcapacity;
-//			}
-//
-//		return SCIP_OKAY;
-//	}
+/** keeps visits array large enough to save visits for all nodes in the branch and bound tree */
+static
+SCIP_RETCODE expandMemorySize(
+		SCIP*                 scip,               /**< SCIP data structure */
+		SCIP_NODESELDATA*     nodeseldata         /**< node selector data */
+)
+	{
+		assert(nodeseldata != NULL);
+
+		/* if array has not been allocated yet, do this now with default initial capacity */
+		//		if( nodeseldata->sizeNodeDiversities == 0 )
+		//		if( nodeseldata->seen == NULL or nodeseldata->sizeNodeDiversities == 0 )
+		if( nodeVisits.size() == 0 or nodeseldata->sizeNodeDiversities == 0 )
+			{
+				//				SCIP_CALL( SCIPallocClearMemoryArray(scip, &nodeseldata->nodeDiversities, INITIALSIZE) ); /*lint !e506*/
+				//				nodeseldata->seen = new std::vector<float>(INITIALSIZE,JUSTCREATED);
+				//				nodeseldata->sizeNodeDiversities = INITIALSIZE;
+
+				//				SCIP_CALL( SCIPallocClearMemoryArray(scip, &nodeseldata->seen, INITIALSIZE) ); /*lint !e506*/
+//				printf("I am in here ");
+				nodeseldata->sizeNodeDiversities = INITIALSIZE;
+				nodeVisits.clear();
+				std::fill_n(std::back_inserter(nodeVisits), INITIALSIZE, JUSTCREATED);
+
+				//				for (int i = 0; i< INITIALSIZE; ++i){
+				//						nodeseldata->seen[i] = JUSTCREATED;
+				//				}
+
+			}
+
+		//				assert(nodeseldata->nodelimit >= SCIPgetNNodes(scip));
+
+		/* if user node limit has not been reached yet, resize the visits array if necessary */
+		//		if( nodeseldata->sizeNodeDiversities < (int)(2 * SCIPgetNNodes(scip)))
+		if( nodeseldata->sizeNodeDiversities < (int)(2 * SCIPgetNNodes(scip)))
+			{
+				int newcapacity;
+				newcapacity = MIN(2 * nodeseldata->sizeNodeDiversities, MAXNODELIMIT);
+
+				printf( "Resizing node visits array, old capacity: %d new capacity : %d\n", nodeseldata->sizeNodeDiversities, newcapacity);
+				assert(newcapacity > nodeseldata->sizeNodeDiversities);
+
+				//				SCIP_CALL( SCIPreallocMemoryArray(scip, &nodeseldata->seen, newcapacity) );
+				//				BMSclearMemoryArray(&(nodeseldata->seen[nodeseldata->sizeNodeDiversities]), newcapacity - nodeseldata->sizeNodeDiversities); /*lint !e866*/
+
+				std::vector<float> temp (newcapacity - nodeseldata->sizeNodeDiversities, JUSTCREATED);
+				nodeVisits.reserve(nodeVisits.size()+temp.size()); // Reserve space first
+				nodeVisits.insert(nodeVisits.end(),temp.begin(),temp.end());
+
+				temp.clear();
+
+				//				for (int i = nodeseldata->sizeNodeDiversities; i< newcapacity; ++i){
+				//						nodeseldata->seen[i] = JUSTCREATED;
+				//				}
+
+				nodeseldata->sizeNodeDiversities = newcapacity;
+			}
+
+		return SCIP_OKAY;
+	}
 
 
 
@@ -298,6 +276,8 @@ void updateNodeDiversity(
 /** copy method for node selector plugins (called when SCIP copies plugins) */
 static SCIP_DECL_NODESELCOPY(nodeselCopydiversitreenode)
 																																																																																																																																																																															{ /*lint --e{715}*/
+
+//		printf("Copying nodeSel \n");
 		assert(scip != NULL);
 		//		assert(nodesel != NULL);
 		//		assert(cState != NULL);
@@ -331,8 +311,7 @@ SCIP_DECL_NODESELEXITSOL(nodeselExitdiversitreenode)
 
 		assert(nodeseldata != NULL);
 
-//		if( nodeseldata->sizeNodeDiversities > 0 )
-		if( nodeVisits.size() > 0 )
+		if( nodeseldata->sizeNodeDiversities > 0 )
 			{
 //				printf("Trying to exit");
 				//				delete nodeseldata->seen;
@@ -342,7 +321,7 @@ SCIP_DECL_NODESELEXITSOL(nodeselExitdiversitreenode)
 
 //				printf("exited");
 			}
-//		nodeseldata->sizeNodeDiversities = 0;
+		nodeseldata->sizeNodeDiversities = 0;
 		nodeseldata->countedSoFar = 0;
 		nodeseldata->maximumDepth = 0;
 
@@ -368,14 +347,13 @@ SCIP_DECL_NODESELINITSOL(nodeselInitdiversitreenode)
 		nodeseldata->countedSoFar = 0;
 		//		nodeseldata->actualSizeNodeDiversities = INITIALSIZE;
 		nodeseldata->maximumDepth = 0;
-		nodeVisits.clear();
-
+nodeVisits.clear();
 		//		printf("Trying to allocate");
 		//		nodeseldata->seen = new std::vector<float>(INITIALSIZE,JUSTCREATED);
 		//		printf("allocated");
 		//		nodeseldata->seen = {};
 		//		nodeseldata->sizeNodeDiversities = INITIALSIZE;
-//		nodeseldata->sizeNodeDiversities = 0;
+		nodeseldata->sizeNodeDiversities = 0;
 
 		return SCIP_OKAY;
   																																											 }
@@ -403,8 +381,7 @@ static SCIP_DECL_NODESELFREE(nodeselFreediversitreenode)
 //		std::cout << "\n \n Complete node size: " << nodeseldata->sizeNodeDiversities << " \n";
 		//		printf(" \n \n Complete node size: float %f :--: dec %d  \n  ",nodeseldata->sizeNodeDiversities,nodeseldata->sizeNodeDiversities);
 
-//		if (nodeseldata->sizeNodeDiversities > 0){
-		if (nodeVisits.size() > 0){
+		if (nodeseldata->sizeNodeDiversities > 0){
 //				printf(" \n \n Trying to delete Dec: %d , Int %i, float %f \n \n ", nodeseldata->sizeNodeDiversities, nodeseldata->sizeNodeDiversities, nodeseldata->sizeNodeDiversities);
 				//				delete nodeseldata->seen;
 				//				assert(nodeseldata->seen != NULL);
@@ -427,9 +404,9 @@ static SCIP_DECL_NODESELFREE(nodeselFreediversitreenode)
 //				printf("Deleted");
 		}
 
-		//		nodeseldata->sizeNodeDiversities = 0;
-		//		nodeseldata->countedSoFar = 0;
-		//		nodeseldata->maximumDepth = 0;
+//				nodeseldata->sizeNodeDiversities = 0;
+//				nodeseldata->countedSoFar = 0;
+//				nodeseldata->maximumDepth = 0;
 
 		SCIPfreeBlockMemory(scip, &nodeseldata);
 		SCIPnodeselSetData(nodesel, NULL);
@@ -737,7 +714,7 @@ void getLBScore(float node1LB, float node2LB, float objectiveLimit, float &node1
 	{
 
 		//		float minVal = std::min( { (float) Optimum_Obj, node1LB, node2LB });
-		float minVal = std::min( { (float) cState.getMBestObjective(), node1LB, node2LB });
+		float minVal = std::min( { (float) cState->getMBestObjective(), node1LB, node2LB });
 
 		node1Score = (node1LB - minVal) / (objectiveLimit - minVal);
 		node2Score = (node2LB - minVal) / (objectiveLimit - minVal);
@@ -790,6 +767,8 @@ SCIP_DECL_NODESELCOMP(nodeselCompdiversitreenode)
 		float node1Div { };
 		float node2Div { };
 
+		SCIP_CALL( expandMemorySize(scip, nodeseldata) );
+
 		float computeNode1 = nodeGetDiversity(nodeseldata, node1);
 		float computeNode2 = nodeGetDiversity(nodeseldata, node2);
 
@@ -809,13 +788,13 @@ SCIP_DECL_NODESELCOMP(nodeselCompdiversitreenode)
 		nodeseldata->maximumDepth = maxDepth;
 
 
-		bool depthCutOffTest = cState.depthcutoff() == 0 or maxDepth >= cState.depthcutoff();
-		bool solCutOffTest = cState.solutioncutoff() == 0 or ( nsols > 0 and  nsols >= (cState.solutioncutoff() * cState.requestedNumberOfSolutions()  ) );
-		bool alphaTest = cState.alphaValue() > 0 or cState.betaValue() > 0;
+		bool depthCutOffTest = cState->depthcutoff() == 0 or maxDepth >= cState->depthcutoff();
+		bool solCutOffTest = cState->solutioncutoff() == 0 or ( nsols > 0 and  nsols >= (cState->solutioncutoff() * cState->requestedNumberOfSolutions()  ) );
+		bool alphaTest = cState->alphaValue() > 0 or cState->betaValue() > 0;
 
 
 
-//		SCIP_CALL( expandMemorySize(scip, nodeseldata) );
+
 
 
 		//				printf("Node nums and Capacities: %d :-: %d :-: %d",  (int) SCIPnodeGetNumber(node1) ,(int) SCIPnodeGetNumber(node2), nodeseldata->sizeNodeDiversities);
@@ -904,7 +883,7 @@ SCIP_DECL_NODESELCOMP(nodeselCompdiversitreenode)
 						bcs.getNodeDiversityValarray(scip, nd1Map, nd2Map, cNode1, cNode2, nsols != nodeseldata->countedSoFar, node1Div, node2Div, (int) SCIPnodeGetNumber(node1), (int) SCIPnodeGetNumber(node2), nd1Selector, nd2Selector, cState);
 
 						nodeseldata->countedSoFar = nsols;
-						cState.setMCountedSolutionsSoFar(nsols);
+						cState->setMCountedSolutionsSoFar(nsols);
 
 						//						printf("This is Counted so far AFTER: %d :--: %d  :--: %d \n", cState->getMCountedSolutionsSoFar(), nodeseldata->countedSoFar, nsols);
 
@@ -965,18 +944,18 @@ SCIP_DECL_NODESELCOMP(nodeselCompdiversitreenode)
 				float scaledDepth1 { };
 				float scaledDepth2 { };
 
-				getLBScore((float) SCIPnodeGetLowerbound(node1), (float) SCIPnodeGetLowerbound(node2), cState.getMBestObjective(), scaledLB1, scaledLB2);
+				getLBScore((float) SCIPnodeGetLowerbound(node1), (float) SCIPnodeGetLowerbound(node2), cState->getMBestObjective(), scaledLB1, scaledLB2);
 				getDepthScore((float) SCIPnodeGetDepth(node1), (float) SCIPnodeGetDepth(node2), (float) minplungedepth, (float) maxplungedepth, scaledDepth1, scaledDepth2);
 
 				//		lbAlpha = 1 - (alpha + beta);
-				lbAlpha = 1 - (cState.alphaValue() + cState.betaValue());
+				lbAlpha = 1 - (cState->alphaValue() + cState->betaValue());
 				if (lbAlpha < 0)
 					{
 						lbAlpha = 0;
 					}
 
-				lowerbound1 = (lbAlpha) * scaledLB1 + (cState.alphaValue() * (2 * node1Div)) + (cState.betaValue() * scaledDepth1);
-				lowerbound2 = (lbAlpha) * scaledLB2 + (cState.alphaValue() * (2 * node2Div)) + (cState.betaValue() * scaledDepth2);
+				lowerbound1 = (lbAlpha) * scaledLB1 + (cState->alphaValue() * (2 * node1Div)) + (cState->betaValue() * scaledDepth1);
+				lowerbound2 = (lbAlpha) * scaledLB2 + (cState->alphaValue() * (2 * node2Div)) + (cState->betaValue() * scaledDepth2);
 
 
 		}
@@ -1021,7 +1000,7 @@ SCIP_DECL_NODESELCOMP(nodeselCompdiversitreenode)
 						float scaledDepth1 { };
 						float scaledDepth2 { };
 
-						lbAlpha = 1 - (cState.alphaValue() + cState.betaValue());
+						lbAlpha = 1 - (cState->alphaValue() + cState->betaValue());
 						if (lbAlpha < 0)
 							{
 								lbAlpha = 0;
@@ -1030,11 +1009,11 @@ SCIP_DECL_NODESELCOMP(nodeselCompdiversitreenode)
 
 
 						//				getLBScore((float) SCIPnodeGetEstimate(node1), (float) SCIPnodeGetEstimate(node2), (float) SCIPgetObjlimit(scip), scaledLBEstimate1, scaledLBEstimate2);
-						getLBScore((float) SCIPnodeGetEstimate(node1), (float) SCIPnodeGetEstimate(node2), cState.getMBestObjective(), scaledLBEstimate1, scaledLBEstimate2);
+						getLBScore((float) SCIPnodeGetEstimate(node1), (float) SCIPnodeGetEstimate(node2), cState->getMBestObjective(), scaledLBEstimate1, scaledLBEstimate2);
 						getDepthScore((float) SCIPnodeGetDepth(node1), (float) SCIPnodeGetDepth(node2), (float) minplungedepth, (float) maxplungedepth, scaledDepth1, scaledDepth2);
 
-						estimate1 = (lbAlpha) * scaledLBEstimate1 + (cState.alphaValue() * (2 * node1Div)) + (cState.betaValue() * scaledDepth1);
-						estimate2 = (lbAlpha) * scaledLBEstimate2 + (cState.alphaValue() * (2 * node2Div)) + (cState.betaValue() * scaledDepth2);
+						estimate1 = (lbAlpha) * scaledLBEstimate1 + (cState->alphaValue() * (2 * node1Div)) + (cState->betaValue() * scaledDepth1);
+						estimate2 = (lbAlpha) * scaledLBEstimate2 + (cState->alphaValue() * (2 * node2Div)) + (cState->betaValue() * scaledDepth2);
 
 				}
 				else{
@@ -1119,7 +1098,7 @@ SCIP_DECL_NODESELCOMP(nodeselCompdiversitreenode)
 
 /** creates the node selector for best first search and includes it in SCIP */
 SCIP_RETCODE SCIPincludeDiversitreeBfs(SCIP *scip /**< SCIP data structure */,
-		currentStateVariables &currentState)
+		currentStateVariables *currentState)
 	{
 		SCIP_NODESELDATA *nodeseldata;
 		SCIP_NODESEL *nodesel;
@@ -1130,7 +1109,7 @@ SCIP_RETCODE SCIPincludeDiversitreeBfs(SCIP *scip /**< SCIP data structure */,
 		nodesel = NULL;
 		//		nodeseldata->seen = NULL;
 		nodeseldata->countedSoFar = 0;
-//		nodeseldata->sizeNodeDiversities = 0;
+		nodeseldata->sizeNodeDiversities = 0;
 		nodeseldata->maximumDepth = 0;
 		nodeVisits.clear();
 
