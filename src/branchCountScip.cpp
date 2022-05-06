@@ -1197,7 +1197,7 @@ float branchCountScip::getNodeDiversityValarray(
 		int numB = 0;// This is the total number of Binary Variables - Meant to check
 
 		assert(scip != NULL);
-		assert(cst != NULL);
+//		assert(cst != NULL);
 
 		SCIP_STAGE stage = SCIPgetStage(scip);
 
