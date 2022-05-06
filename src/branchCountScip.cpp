@@ -86,7 +86,7 @@ static SCIP_RETCODE getExpandedSolutionsValarray(
 		SCIP_SPARSESOL **sols, /**< sparse solutions to expands and write */
 		int nsols /**< number of sparse solutions */
 		//,std::vector<std::vector<float>> &solutionMap /**< Pointer to the return Solution Map */
-		, solutionStoreVector &generatedSolution, currentStateVariables *currentState)
+		, solutionStoreVector &generatedSolution, currentStateVariables &currentState)
 	{
 
 		//	std::cout << " Expanding Solutions " << nallvars << std::endl;
@@ -309,7 +309,7 @@ static SCIP_RETCODE getExpandedSolutionsValarray(
 
 				ResultstmpallVariables.clear();
 
-				ResultstmpallVariables = currentState->getMBestSolutionValues();
+				ResultstmpallVariables = currentState.getMBestSolutionValues();
 				generatedSolution.updateSolution(ResultstmpallVariables);
 				//				solutionMap.push_back(tmpallVariables);
 
@@ -1197,7 +1197,7 @@ float branchCountScip::getNodeDiversityValarray(
 		int numB = 0;// This is the total number of Binary Variables - Meant to check
 
 		assert(scip != NULL);
-		assert(cst != NULL);
+//		assert(cst != NULL);
 
 		SCIP_STAGE stage = SCIPgetStage(scip);
 
