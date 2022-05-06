@@ -186,7 +186,7 @@ SCIP_RETCODE expandMemorySize(
 				assert(newcapacity > nodeseldata->sizenodevisit);
 
 				SCIP_CALL( SCIPreallocMemoryArray(scip, &nodeseldata->nodevisit, newcapacity) );
-//				BMSclearMemoryArray(&(nodeseldata->nodevisit[nodeseldata->sizenodevisit]), newcapacity - nodeseldata->sizenodevisit); /*lint !e866*/
+				BMSclearMemoryArray(&(nodeseldata->nodevisit[nodeseldata->sizenodevisit]), newcapacity - nodeseldata->sizenodevisit); /*lint !e866*/
 
 
 				for (int i = nodeseldata->sizenodevisit; i < newcapacity; ++i){
