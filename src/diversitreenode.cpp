@@ -90,7 +90,7 @@ float nodeGetDiversity(
 )
 	{
 		int nodenumber;
-//		float result = 999.0;
+		float result;
 
 		assert(nodeseldata != NULL);
 		assert(node != NULL);
@@ -103,18 +103,29 @@ float nodeGetDiversity(
 
 		//		if (nodenumber > nodeseldata->actualSizeNodeDiversities){
 //		if (nodenumber >= nodeseldata->sizeNodeDiversities){
-		if (nodenumber >= nodeVisits.size()){
-				//				printf("Didn't find node %d and result is %f : \n \n", nodenumber, result);
-				return JUSTCREATED;
-		}else{
-				//				result  = nodeseldata->seen[nodenumber];
-//				result  = nodeVisits[nodenumber];
-				//				printf("Found node %d and result is %f :", nodenumber, result);
-				//				return nodeseldata->seen->at(nodenumber);
-				//				return nodeseldata->seen[nodenumber];
-				return nodeVisits.at(nodenumber);
-				//				return result;
+//		if (nodenumber >= nodeVisits.size()){
+//				//				printf("Didn't find node %d and result is %f : \n \n", nodenumber, result);
+//				return JUSTCREATED;
+//		}else{
+//				//				result  = nodeseldata->seen[nodenumber];
+////				result  = nodeVisits[nodenumber];
+//				//				printf("Found node %d and result is %f :", nodenumber, result);
+//				//				return nodeseldata->seen->at(nodenumber);
+//				//				return nodeseldata->seen[nodenumber];
+//				return nodeVisits.at(nodenumber);
+//				//				return result;
+//		}
+
+		try{
+				result = nodeVisits.at(nodenumber);
 		}
+		catch(...){
+				nodeVisits[nodenumber] = JUSTCREATED;
+				result = JUSTCREATED;
+
+		}
+
+		return result;
 
 	}
 
@@ -150,11 +161,14 @@ void updateNodeDiversity(
 		//		if (not result.second) { result.first->second = 0; }
 
 //		if( nodenumber < nodeseldata->sizeNodeDiversities ){
-		if( nodenumber < nodeVisits.size() ){
+//		if( nodenumber < nodeVisits.size() ){
+//
+//				//				nodeseldata->seen[nodenumber] = diversity;
+//				nodeVisits[nodenumber] = diversity;
+//		}
 
-				//				nodeseldata->seen[nodenumber] = diversity;
-				nodeVisits.at(nodenumber) = diversity;
-		}
+		nodeVisits[nodenumber] = diversity;
+
 		//		try{
 		//				//				nodeseldata->seen->at(nodenumber) = diversity;
 		//				nodeseldata->seen[nodenumber] = diversity;
@@ -167,72 +181,72 @@ void updateNodeDiversity(
 
 	}
 
-/** keeps visits array large enough to save visits for all nodes in the branch and bound tree */
-static
-SCIP_RETCODE expandMemorySize(
-		SCIP*                 scip,               /**< SCIP data structure */
-		SCIP_NODESELDATA*     nodeseldata         /**< node selector data */
-)
-	{
-		assert(nodeseldata != NULL);
-
-		/* if array has not been allocated yet, do this now with default initial capacity */
-		//		if( nodeseldata->sizeNodeDiversities == 0 )
-		//		if( nodeseldata->seen == NULL or nodeseldata->sizeNodeDiversities == 0 )
-		if( nodeVisits.size() == 0)
-			{
-				//				SCIP_CALL( SCIPallocClearMemoryArray(scip, &nodeseldata->nodeDiversities, INITIALSIZE) ); /*lint !e506*/
-				//				nodeseldata->seen = new std::vector<float>(INITIALSIZE,JUSTCREATED);
-				//				nodeseldata->sizeNodeDiversities = INITIALSIZE;
-
-				//				SCIP_CALL( SCIPallocClearMemoryArray(scip, &nodeseldata->seen, INITIALSIZE) ); /*lint !e506*/
-//				nodeseldata->sizeNodeDiversities = INITIALSIZE;
-				std::vector<float> temp1(INITIALSIZE,JUSTCREATED);
-				nodeVisits = temp1;
-				temp1.clear();
-//				std::fill_n(std::back_inserter(nodeVisits), INITIALSIZE, JUSTCREATED);
-
-				//				for (int i = 0; i< INITIALSIZE; ++i){
-				//						nodeseldata->seen[i] = JUSTCREATED;
-				//				}
-
-			}
-
-		//				assert(nodeseldata->nodelimit >= SCIPgetNNodes(scip));
-
-		/* if user node limit has not been reached yet, resize the visits array if necessary */
-		//		if( nodeseldata->sizeNodeDiversities < (int)(2 * SCIPgetNNodes(scip)))
-//		if( nodeseldata->sizeNodeDiversities < (int)(2 * SCIPgetNNodes(scip)))
-		if( nodeVisits.size() < (int)(2 * SCIPgetNNodes(scip)))
-			{
-				int newcapacity;
-//				newcapacity = MIN(2 * nodeseldata->sizeNodeDiversities, MAXNODELIMIT);
-				newcapacity = MIN(2 * nodeVisits.size(), MAXNODELIMIT);
-
-//				printf( "Resizing node visits array, old capacity: %d new capacity : %d\n", nodeseldata->sizeNodeDiversities, newcapacity);
-				printf( "Resizing node visits array, old capacity: %d new capacity : %d\n", nodeVisits.size(), newcapacity);
-//				assert(newcapacity > nodeseldata->sizeNodeDiversities);
-				assert(newcapacity > nodeVisits.size());
-
-				//				SCIP_CALL( SCIPreallocMemoryArray(scip, &nodeseldata->seen, newcapacity) );
-				//				BMSclearMemoryArray(&(nodeseldata->seen[nodeseldata->sizeNodeDiversities]), newcapacity - nodeseldata->sizeNodeDiversities); /*lint !e866*/
-
-//				std::vector<float> temp2 (newcapacity - nodeseldata->sizeNodeDiversities, JUSTCREATED);
-				std::vector<float> temp2 (newcapacity - nodeVisits.size(), JUSTCREATED);
-				nodeVisits.reserve(nodeVisits.size()+temp2.size()); // Reserve space first
-				nodeVisits.insert(nodeVisits.end(),temp2.begin(),temp2.end());
-
-				temp2.clear();
-
-				//				for (int i = nodeseldata->sizeNodeDiversities; i< newcapacity; ++i){
-				//						nodeseldata->seen[i] = JUSTCREATED;
-				//				}
-
-//				nodeseldata->sizeNodeDiversities = newcapacity;
-			}
-
-		return SCIP_OKAY;
-	}
+///** keeps visits array large enough to save visits for all nodes in the branch and bound tree */
+//static
+//SCIP_RETCODE expandMemorySize(
+//		SCIP*                 scip,               /**< SCIP data structure */
+//		SCIP_NODESELDATA*     nodeseldata         /**< node selector data */
+//)
+//	{
+//		assert(nodeseldata != NULL);
+//
+//		/* if array has not been allocated yet, do this now with default initial capacity */
+//		//		if( nodeseldata->sizeNodeDiversities == 0 )
+//		//		if( nodeseldata->seen == NULL or nodeseldata->sizeNodeDiversities == 0 )
+//		if( nodeVisits.size() == 0)
+//			{
+//				//				SCIP_CALL( SCIPallocClearMemoryArray(scip, &nodeseldata->nodeDiversities, INITIALSIZE) ); /*lint !e506*/
+//				//				nodeseldata->seen = new std::vector<float>(INITIALSIZE,JUSTCREATED);
+//				//				nodeseldata->sizeNodeDiversities = INITIALSIZE;
+//
+//				//				SCIP_CALL( SCIPallocClearMemoryArray(scip, &nodeseldata->seen, INITIALSIZE) ); /*lint !e506*/
+////				nodeseldata->sizeNodeDiversities = INITIALSIZE;
+//				std::vector<float> temp1(INITIALSIZE,JUSTCREATED);
+//				nodeVisits = temp1;
+//				temp1.clear();
+////				std::fill_n(std::back_inserter(nodeVisits), INITIALSIZE, JUSTCREATED);
+//
+//				//				for (int i = 0; i< INITIALSIZE; ++i){
+//				//						nodeseldata->seen[i] = JUSTCREATED;
+//				//				}
+//
+//			}
+//
+//		//				assert(nodeseldata->nodelimit >= SCIPgetNNodes(scip));
+//
+//		/* if user node limit has not been reached yet, resize the visits array if necessary */
+//		//		if( nodeseldata->sizeNodeDiversities < (int)(2 * SCIPgetNNodes(scip)))
+////		if( nodeseldata->sizeNodeDiversities < (int)(2 * SCIPgetNNodes(scip)))
+//		if( nodeVisits.size() < (int)(2 * SCIPgetNNodes(scip)))
+//			{
+//				int newcapacity;
+////				newcapacity = MIN(2 * nodeseldata->sizeNodeDiversities, MAXNODELIMIT);
+//				newcapacity = MIN(2 * nodeVisits.size(), MAXNODELIMIT);
+//
+////				printf( "Resizing node visits array, old capacity: %d new capacity : %d\n", nodeseldata->sizeNodeDiversities, newcapacity);
+//				printf( "Resizing node visits array, old capacity: %d new capacity : %d\n", nodeVisits.size(), newcapacity);
+////				assert(newcapacity > nodeseldata->sizeNodeDiversities);
+//				assert(newcapacity > nodeVisits.size());
+//
+//				//				SCIP_CALL( SCIPreallocMemoryArray(scip, &nodeseldata->seen, newcapacity) );
+//				//				BMSclearMemoryArray(&(nodeseldata->seen[nodeseldata->sizeNodeDiversities]), newcapacity - nodeseldata->sizeNodeDiversities); /*lint !e866*/
+//
+////				std::vector<float> temp2 (newcapacity - nodeseldata->sizeNodeDiversities, JUSTCREATED);
+//				std::vector<float> temp2 (newcapacity - nodeVisits.size(), JUSTCREATED);
+//				nodeVisits.reserve(nodeVisits.size()+temp2.size()); // Reserve space first
+//				nodeVisits.insert(nodeVisits.end(),temp2.begin(),temp2.end());
+//
+//				temp2.clear();
+//
+//				//				for (int i = nodeseldata->sizeNodeDiversities; i< newcapacity; ++i){
+//				//						nodeseldata->seen[i] = JUSTCREATED;
+//				//				}
+//
+////				nodeseldata->sizeNodeDiversities = newcapacity;
+//			}
+//
+//		return SCIP_OKAY;
+//	}
 
 
 
@@ -801,7 +815,7 @@ SCIP_DECL_NODESELCOMP(nodeselCompdiversitreenode)
 
 
 
-		SCIP_CALL( expandMemorySize(scip, nodeseldata) );
+//		SCIP_CALL( expandMemorySize(scip, nodeseldata) );
 
 
 		//				printf("Node nums and Capacities: %d :-: %d :-: %d",  (int) SCIPnodeGetNumber(node1) ,(int) SCIPnodeGetNumber(node2), nodeseldata->sizeNodeDiversities);

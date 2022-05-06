@@ -41,7 +41,7 @@ extern "C" {
  */
 
 static currentStateVariables cState;
-static std::vector<float> nodeVisits;
+static std::map<int,float> nodeVisits;
 
 //static
 //void setCurrentState(currentStateVariables *currentState);
