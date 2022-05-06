@@ -1,9 +1,0 @@
-*mip cplex
-solnpool generatedSoln.gdx
-solnpoolpop 2
-solnpoolintensity 4
-solnpoolcapacity 1000
-solnpoolgap 0.1
-populatelim 1000
-*ResLim 5
-*tilim 5
