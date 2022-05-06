@@ -91,7 +91,8 @@ SCIP_Real nodeGetVisit(
 		assert(node != NULL);
 
 		/* nodes numbers start with 1 for the root node */
-		nodenumber = (int)(SCIPnodeGetNumber(node) - 1);
+//		nodenumber = (int)(SCIPnodeGetNumber(node) - 1);
+		nodenumber = (int)(SCIPnodeGetNumber(node));
 		assert(nodenumber >= 0);
 
 		if( nodenumber >= nodeseldata->sizenodevisit ){
@@ -122,7 +123,8 @@ void updateVisit(
 
 
 		int nodenumber;
-		nodenumber = (int)(SCIPnodeGetNumber(node) - 1);
+//		nodenumber = (int)(SCIPnodeGetNumber(node) - 1);
+		nodenumber = (int)(SCIPnodeGetNumber(node));
 
 		if( nodenumber < nodeseldata->sizenodevisit ){
 				visit[nodenumber] = diversity;
