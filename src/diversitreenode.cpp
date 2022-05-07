@@ -175,9 +175,10 @@ SCIP_RETCODE expandMemorySize(
 				//						nodeseldata->nodevisit[i] = JUSTCREATED;
 				//				}
 
-				std::vector<SCIP_Real> temp1(INITIALSIZE,JUSTCREATED);
-				nodeVisited.insert(nodeVisited.end(),temp1.begin(), temp1.end());
-				temp1.clear();
+//				std::vector<SCIP_Real> temp1(INITIALSIZE,JUSTCREATED);
+//				nodeVisited.insert(nodeVisited.end(),temp1.begin(), temp1.end());
+//				temp1.clear();
+				nodeVisited.resize(INITIALSIZE,JUSTCREATED);
 
 
 			}
@@ -204,9 +205,11 @@ SCIP_RETCODE expandMemorySize(
 
 				//				nodeseldata->sizenodevisit = newcapacity;
 
-				std::vector<SCIP_Real> temp(newcapacity - nodeVisited.size(), JUSTCREATED);
-				nodeVisited.insert(nodeVisited.end(),temp.begin(),temp.end());
-				temp.clear();
+//				std::vector<SCIP_Real> temp(newcapacity - nodeVisited.size(), JUSTCREATED);
+//				nodeVisited.insert(nodeVisited.end(),temp.begin(),temp.end());
+//				temp.clear();
+
+				nodeVisited.resize(newcapacity,JUSTCREATED);
 
 			}
 
