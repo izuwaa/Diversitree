@@ -41,7 +41,7 @@ extern "C" {
  */
 
 static currentStateVariables CS;
-//static std::vector<float> nodeVisits;
+static std::vector<SCIP_Real> nodeVisited;
 
 //static
 //void setCurrentState(currentStateVariables *currentState);
