@@ -985,7 +985,7 @@ SCIP_RETCODE branchCountScip::phaseTwo(SCIP *scip, /**< SCIP data structure */
 		if (currentState.getMNodeType() == "DiversiTree")
 			{
 				printf("########################## SETTING NODE SELECTION RULE TO %s ################################# : \n", currentState.getMNodeType().c_str());
-//				SCIP_CALL(SCIPincludeDiversitreeBfs(scip, currentState));
+				//				SCIP_CALL(SCIPincludeDiversitreeBfs(scip, currentState));
 				SCIP_CALL(SCIPincludeDiversitreeBfs(scip));
 				CS = currentState;
 
@@ -1123,24 +1123,24 @@ SCIP_RETCODE branchCountScip::runSCIP(solutionStoreVector &generatedSolution, cu
 		//TODO We need to get the file extension from the file name
 		std::string fName = branchCountScip::m_allOptions.m_scipMPSFileDirectory + "/" + currentState.m_optimizationProblems + ".mps";
 
-		if (currentState.getMObjectiveCalculated() == 1){
-
-				printf("\n Already calculated best objective for this problem  \n");
-				printf("\n *********************************  This is the Complete Objective: %f ********************************* \n", currentState.getMBestObjective());
-
-
-		}
-		else{
-
-
-				printf("\n This is the name of the scipMPSFileDirectory: %s  \n", branchCountScip::m_allOptions.m_scipMPSFileDirectory.c_str());
-				printf("\n Calculating PhaseOne: Objective Function:  \n");
+		//		if (currentState.getMObjectiveCalculated() == 1){
+		//
+		//				printf("\n Already calculated best objective for this problem  \n");
+		//				printf("\n *********************************  This is the Complete Objective: %f ********************************* \n", currentState.getMBestObjective());
+		//
+		//
+		//		}
+		//		else{
 
 
-				SCIP_CALL(branchCountScip::phaseOne(scip, "countPhaseOne", fName.c_str(), "mps", generatedSolution, currentState));
-				currentState.setMObjectiveCalculated(1);
+		printf("\n This is the name of the scipMPSFileDirectory: %s  \n", branchCountScip::m_allOptions.m_scipMPSFileDirectory.c_str());
+		printf("\n Calculating PhaseOne: Objective Function:  \n");
 
-		}
+
+		SCIP_CALL(branchCountScip::phaseOne(scip, "countPhaseOne", fName.c_str(), "mps", generatedSolution, currentState));
+		currentState.setMObjectiveCalculated(1);
+
+		//		}
 
 		scip = NULL;
 		SCIP_CALL(SCIPcreate(&scip));
@@ -1160,7 +1160,7 @@ SCIP_RETCODE branchCountScip::runSCIP(solutionStoreVector &generatedSolution, cu
 		//				printf("\n Skipping PhaseOne: Objective function already exists.  \n");
 		//				printf("\n This is the Objective: %f  \n", currentState.getMBestObjective());
 
-//		SCIP_CALL(branchCountScip::phaseTwo(scip, "countPhaseTwo", fName.c_str(), "mps", generatedSolution, currentState));
+		//		SCIP_CALL(branchCountScip::phaseTwo(scip, "countPhaseTwo", fName.c_str(), "mps", generatedSolution, currentState));
 		//			}
 
 		scip = NULL;
