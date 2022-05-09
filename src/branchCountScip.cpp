@@ -1154,7 +1154,7 @@ SCIP_RETCODE branchCountScip::runSCIP(solutionStoreVector &generatedSolution, cu
 		//				printf("\n Skipping PhaseOne: Objective function already exists.  \n");
 		//				printf("\n This is the Objective: %f  \n", currentState.getMBestObjective());
 
-		SCIP_CALL(branchCountScip::phaseTwo(scip, "countPhaseTwo", fName.c_str(), "mps", generatedSolution, currentState));
+//		SCIP_CALL(branchCountScip::phaseTwo(scip, "countPhaseTwo", fName.c_str(), "mps", generatedSolution, currentState));
 		//			}
 
 		scip = NULL;
