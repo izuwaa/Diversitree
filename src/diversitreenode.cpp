@@ -63,7 +63,7 @@
 struct SCIP_NodeselData
 	{
 		//		SCIP_Real*            nodevisit;         /**< array to store the number of node visits so far for every node */
-		//		int                   sizenodevisit;     /**< the size of the visits array */
+		int                   sizenodevisit;     /**< the size of the visits array */
 
 		SCIP_Real 						maxplungequot; 		/**< maximal quotient (curlowerbound - lowerbound)/(cutoffbound - lowerbound) where plunging is performed */
 		int 									minplungedepth; 	/**< minimal plunging depth, before new best node may be selected (-1 for dynamic setting) */
@@ -78,80 +78,7 @@ struct SCIP_NodeselData
  * Local methods
  */
 
-/** get the number times @p node has been visited so far */
-static
-SCIP_Real nodeGetVisit(
-		SCIP_NODESELDATA*     nodeseldata,        /**< node selector data */
-		SCIP_NODE*            node                /**< the node in question */
-)
-	{
-		int nodenumber;
 
-		assert(nodeseldata != NULL);
-		assert(node != NULL);
-
-		/* nodes numbers start with 1 for the root node */
-		//		nodenumber = (int)(SCIPnodeGetNumber(node) - 1);
-		nodenumber = (int)(SCIPnodeGetNumber(node));
-		assert(nodenumber >= 0);
-
-		if( nodenumber >= (int)nodeVisited.size() ){
-				return JUSTCREATED;
-		}
-		else
-			{
-				return nodeVisited.at(nodenumber);
-			}
-
-
-
-	}
-
-
-/** increases the visits counter along the path from @p node to the root node */
-static
-void updateVisit(
-		SCIP_NODESELDATA*     nodeseldata,        /**< node selector data */
-		SCIP_NODE*            node,               /**< leaf node of path along which the visits are backpropagated */
-		SCIP_Real 						diversity						/**< The diversity to store */
-)
-	{
-		//		SCIP_Real* visit;
-
-		assert(nodeseldata != NULL);
-		assert(node != NULL);
-
-		//		visit = nodeseldata->nodevisit;
-		//		assert(visit != NULL);
-
-
-		int nodenumber;
-		//		nodenumber = (int)(SCIPnodeGetNumber(node) - 1);
-		nodenumber = (int)(SCIPnodeGetNumber(node));
-
-		if( nodenumber < (int)nodeVisited.size() ){
-				nodeVisited.at(nodenumber) = diversity;
-		}
-
-
-		/* increase visits counter of all nodes along the path until root node is reached (which has NULL as parent) */
-		//		do
-		//			{
-		//				int nodenumber;
-		//
-		//				nodenumber = (int)(SCIPnodeGetNumber(node) - 1);
-		//				if( nodenumber < nodeseldata->sizenodevisits )
-		//					++(visits[nodenumber]);
-		//
-		//				assert(SCIPnodeGetParent(node) == NULL || SCIPnodeGetDepth(node) >= 1);
-		//				node = SCIPnodeGetParent(node);
-		//			}
-		//		while( node != NULL );
-
-
-
-
-	}
 
 
 
@@ -175,10 +102,14 @@ SCIP_RETCODE expandMemorySize(
 				//						nodeseldata->nodevisit[i] = JUSTCREATED;
 				//				}
 
-//				std::vector<SCIP_Real> temp1(INITIALSIZE,JUSTCREATED);
-//				nodeVisited.insert(nodeVisited.end(),temp1.begin(), temp1.end());
-//				temp1.clear();
-				nodeVisited.resize(INITIALSIZE,JUSTCREATED);
+				//				std::vector<SCIP_Real> temp1(INITIALSIZE,JUSTCREATED);
+				//				nodeVisited.insert(nodeVisited.end(),temp1.begin(), temp1.end());
+				//
+				std::vector<SCIP_Real> temp1(INITIALSIZE,JUSTCREATED);
+				nodeVisited.clear();
+				nodeVisited = temp1;
+				temp1.clear();
+				nodeseldata->sizenodevisit = INITIALSIZE;
 
 
 			}
@@ -189,7 +120,7 @@ SCIP_RETCODE expandMemorySize(
 		if( (int)nodeVisited.size() < (int)(2 * SCIPgetNNodes(scip)) )
 			{
 				int newcapacity;
-				newcapacity = std::max({(int)(2 * nodeVisited.size()), (int)(2*SCIPgetNNodes(scip)) });
+				newcapacity = std::max({(int)(2 * nodeVisited.size()), 2* nodeseldata->sizenodevisit, 2*INITIALSIZE, (int)(2*SCIPgetNNodes(scip)) });
 
 
 				printf("Resizing node visits array, old capacity: %d new capacity : %d\n", nodeVisited.size(), newcapacity);
@@ -205,11 +136,12 @@ SCIP_RETCODE expandMemorySize(
 
 				//				nodeseldata->sizenodevisit = newcapacity;
 
-//				std::vector<SCIP_Real> temp(newcapacity - nodeVisited.size(), JUSTCREATED);
-//				nodeVisited.insert(nodeVisited.end(),temp.begin(),temp.end());
-//				temp.clear();
+				//				std::vector<SCIP_Real> temp(newcapacity - nodeVisited.size(), JUSTCREATED);
+				//				nodeVisited.insert(nodeVisited.end(),temp.begin(),temp.end());
+				//				temp.clear();
 
 				nodeVisited.resize(newcapacity,JUSTCREATED);
+				nodeseldata->sizenodevisit = newcapacity;
 
 			}
 
@@ -219,6 +151,88 @@ SCIP_RETCODE expandMemorySize(
 		return SCIP_OKAY;
 	}
 
+/** get the number times @p node has been visited so far */
+static
+SCIP_Real nodeGetVisit(
+		SCIP_NODESELDATA*     nodeseldata,        /**< node selector data */
+		SCIP_NODE*            node                /**< the node in question */
+)
+	{
+		int nodenumber;
+
+		assert(nodeseldata != NULL);
+		assert(node != NULL);
+
+		/* nodes numbers start with 1 for the root node */
+		//		nodenumber = (int)(SCIPnodeGetNumber(node) - 1);
+		nodenumber = (int)(SCIPnodeGetNumber(node));
+		assert(nodenumber >= 0);
+
+		if( nodenumber >= (int)nodeVisited.size() || nodenumber >= nodeseldata->sizenodevisit ){
+				return JUSTCREATED;
+		}
+		else
+			{
+				return nodeVisited.at(nodenumber);
+			}
+
+
+
+	}
+
+
+/** increases the visits counter along the path from @p node to the root node */
+static
+void updateVisit(SCIP*                 scip,               /**< SCIP data structure */
+		SCIP_NODESELDATA*     nodeseldata,        /**< node selector data */
+		SCIP_NODE*            node,               /**< leaf node of path along which the visits are backpropagated */
+		SCIP_Real 						diversity						/**< The diversity to store */
+)
+	{
+		//		SCIP_Real* visit;
+
+		assert(nodeseldata != NULL);
+		assert(node != NULL);
+
+		//		visit = nodeseldata->nodevisit;
+		//		assert(visit != NULL);
+
+
+		int nodenumber;
+		//		nodenumber = (int)(SCIPnodeGetNumber(node) - 1);
+		nodenumber = (int)(SCIPnodeGetNumber(node));
+
+
+		if( nodenumber < (int)nodeVisited.size() and nodeVisited.size() > 0  ){
+				nodeVisited.at(nodenumber) = diversity;
+		}
+		else{
+
+				expandMemorySize(scip, nodeseldata);
+
+		}
+
+
+		/* increase visits counter of all nodes along the path until root node is reached (which has NULL as parent) */
+		//		do
+		//			{
+		//				int nodenumber;
+		//
+		//				nodenumber = (int)(SCIPnodeGetNumber(node) - 1);
+		//				if( nodenumber < nodeseldata->sizenodevisits )
+		//					++(visits[nodenumber]);
+		//
+		//				assert(SCIPnodeGetParent(node) == NULL || SCIPnodeGetDepth(node) >= 1);
+		//				node = SCIPnodeGetParent(node);
+		//			}
+		//		while( node != NULL );
+
+
+
+
+	}
+
+
 /*
  * Callback methods of node selector
  */
@@ -226,17 +240,17 @@ SCIP_RETCODE expandMemorySize(
 /** copy method for node selector plugins (called when SCIP copies plugins) */
 static
 SCIP_DECL_NODESELCOPY(nodeselCopyDiversitreenode)
-  													 {  /*lint --e{715}*/
+  															 {  /*lint --e{715}*/
 		assert(scip != NULL);
 		SCIP_CALL(SCIPincludeDiversitreeBfs(scip, CS));
 
 		return SCIP_OKAY;
-  													 }
+  															 }
 
 /** solving process initialization method of node selector (called when branch and bound process is about to begin) */
 static
 SCIP_DECL_NODESELINITSOL(nodeselInitsolDiversitreenode)
-  													 {
+  															 {
 		SCIP_NODESELDATA* nodeseldata;
 		assert(scip != NULL);
 		assert(nodesel != NULL);
@@ -246,16 +260,16 @@ SCIP_DECL_NODESELINITSOL(nodeselInitsolDiversitreenode)
 		assert(nodeseldata != NULL);
 		nodeseldata->countedSoFar = 0;
 		nodeseldata->maximumDepth = 0;
-		//		nodeseldata->sizenodevisit = 0;
+		nodeseldata->sizenodevisit = 0;
 
 
 		return SCIP_OKAY;
-  													 }
+  															 }
 
 /** solving process deinitialization method of node selector (called when branch and bound process data gets freed) */
 static
 SCIP_DECL_NODESELEXITSOL(nodeselExitsolDiversitreenode)
-  													 {
+  															 {
 		SCIP_NODESELDATA* nodeseldata;
 		assert(scip != NULL);
 		assert(nodesel != NULL);
@@ -271,41 +285,42 @@ SCIP_DECL_NODESELEXITSOL(nodeselExitsolDiversitreenode)
 				nodeVisited.clear();
 
 			}
-		//		nodeseldata->sizenodevisit = 0;
+		nodeseldata->sizenodevisit = 0;
 		nodeseldata->countedSoFar = 0;
 		nodeseldata->maximumDepth = 0;
 
 
 		return SCIP_OKAY;
-  													 }
+  															 }
 
 /** destructor of node selector to free user data (called when SCIP is exiting) */
 static
 SCIP_DECL_NODESELFREE(nodeselFreeDiversitreenode)
-  													 {
+  															 {
 		SCIP_NODESELDATA* nodeseldata;
 		assert(scip != NULL);
 		assert(nodesel != NULL);
 
 		nodeseldata = SCIPnodeselGetData(nodesel);
-		if( nodeVisited.size() > 0 )
-			{
-				//				assert(nodeseldata->nodevisit != NULL);
-				//				SCIPfreeMemoryArray(scip, &nodeseldata->nodevisit);
-				nodeVisited.clear();
-
-			}
+//		if( nodeVisited.size() > 0 or nodeseldata->sizenodevisit > 0 )   // CONSIDER PUTTING THIS CHECK BACK
+//			{
+//				//				assert(nodeseldata->nodevisit != NULL);
+//				//				SCIPfreeMemoryArray(scip, &nodeseldata->nodevisit);
+//				nodeVisited.clear();
+//
+//			}
+		nodeVisited.clear();
 		SCIPfreeBlockMemory(scip, &nodeseldata);
 
 		SCIPnodeselSetData(nodesel, NULL);
 
 		return SCIP_OKAY;
-  													 }
+  															 }
 
 /** node selection method of node selector */
 static
 SCIP_DECL_NODESELSELECT(nodeselSelectDiversitreenode)
-  													 {
+  															 {
 		SCIP_NODESELDATA *nodeseldata;
 		int minplungedepth;
 		int maxplungedepth;
@@ -426,7 +441,7 @@ SCIP_DECL_NODESELSELECT(nodeselSelectDiversitreenode)
 
 		return SCIP_OKAY;
 
-  													 }
+  															 }
 
 
 
@@ -645,7 +660,7 @@ void getDepthScore(float node1Depth, float node2Depth, float minDepth, float max
 /** node comparison method of UCT node selector */
 static
 SCIP_DECL_NODESELCOMP(nodeselCompDiversitreenode)
-  													 {  /*lint --e{715}*/
+  															 {  /*lint --e{715}*/
 
 
 
@@ -800,13 +815,13 @@ SCIP_DECL_NODESELCOMP(nodeselCompDiversitreenode)
 
 				if (cNode1 == true){
 						//						printf(" Updating computeNode1 ");
-						updateVisit(nodeseldata, node1, node1Div);
+						updateVisit(scip, nodeseldata, node1, node1Div);
 				}
 
 
 				if (cNode2 == true){
 						//						printf(" Updating computeNode2 ");
-						updateVisit(nodeseldata, node2, node2Div);
+						updateVisit(scip, nodeseldata, node2, node2Div);
 				}
 
 
@@ -995,7 +1010,7 @@ SCIP_DECL_NODESELCOMP(nodeselCompDiversitreenode)
 
 			}
 
-  													 }
+  															 }
 
 /*
  * node selector specific interface methods

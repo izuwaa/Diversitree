@@ -82,7 +82,14 @@ MAINFILE	=	$(BINDIR)/$(MAIN)
 MAINSHORTLINK	=	$(BINDIR)/$(MAINNAME)
 MAINOBJFILES	=	$(addprefix $(OBJDIR)/,$(MAINOBJ))
 
+#ASAN_FLAGS = -fsanitize=address
+#ASAN_LIBS  = -static-libsan
+#CFLAGS    := -Wall -Werror --std=gnu99 -g3
+#LDFLAGS   += -lpthread
+
 #TESTSETDIR	=	testset
+
+#-fsanitize=address -fsanitize=undefined -fno-sanitize-recover=all -fsanitize=memory
 
 #-----------------------------------------------------------------------------
 # Rules
