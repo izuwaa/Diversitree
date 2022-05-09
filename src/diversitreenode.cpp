@@ -1030,7 +1030,7 @@ SCIP_RETCODE SCIPincludeDiversitreeBfs(
 
 		nodesel = NULL;
 		//		nodeseldata->nodevisit = NULL;
-		//		nodeseldata->sizenodevisit = 0;
+		nodeseldata->sizenodevisit = 0;
 		nodeVisited.clear();
 		nodeseldata->countedSoFar = 0;
 		nodeseldata->maximumDepth = 0;
