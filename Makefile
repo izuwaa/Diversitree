@@ -62,6 +62,7 @@ include $(SCIPDIR)/make/make.project
 
 MAINNAME	=	diverseNearOptimal
 MAINOBJ		=	main.o\
+				diversitreenode.o\
 				branchCountScip.o\
 				currentStateVariables.o\
 				diversityCalculator.o\
@@ -72,7 +73,7 @@ MAINOBJ		=	main.o\
 				solutionStoreMap.o\
 				solutionStoreVector.o\
 				utilities.o\
-				diversitreenode.o\
+				
 				
 				
 MAINSRC		=	$(addprefix $(SRCDIR)/,$(MAINOBJ:.o=.cpp))

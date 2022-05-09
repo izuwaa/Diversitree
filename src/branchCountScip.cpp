@@ -982,7 +982,10 @@ SCIP_RETCODE branchCountScip::phaseTwo(SCIP *scip, /**< SCIP data structure */
 		if (currentState.getMNodeType() == "DiversiTree")
 			{
 				printf("########################## SETTING NODE SELECTION RULE TO %s ################################# : \n", currentState.getMNodeType().c_str());
-				SCIP_CALL(SCIPincludeDiversitreeBfs(scip, currentState));
+//				SCIP_CALL(SCIPincludeDiversitreeBfs(scip, currentState));
+				SCIP_CALL(SCIPincludeDiversitreeBfs(scip));
+				CS = currentState;
+
 				SCIP_CALL(SCIPsetBoolParam(scip, "constraints/countsols/collect", TRUE));
 				//				SCIP_CALL(SCIPsetBoolParam(scip, "constraints/countsols/discardsols", FALSE));
 			}

@@ -244,7 +244,8 @@ SCIP_DECL_NODESELCOPY(nodeselCopyDiversitreenode)
   															 {  /*lint --e{715}*/
 		printf("Copying \n");
 		assert(scip != NULL);
-		SCIP_CALL(SCIPincludeDiversitreeBfs(scip, CS));
+//		SCIP_CALL(SCIPincludeDiversitreeBfs(scip, CS));
+		SCIP_CALL(SCIPincludeDiversitreeBfs(scip));
 
 		return SCIP_OKAY;
   															 }
@@ -1025,8 +1026,8 @@ SCIP_DECL_NODESELCOMP(nodeselCompDiversitreenode)
 
 /** creates the uct node selector and includes it in SCIP */
 SCIP_RETCODE SCIPincludeDiversitreeBfs(
-		SCIP*                 scip                /**< SCIP data structure */,
-		currentStateVariables &currentState
+		SCIP*                 scip                /**< SCIP data structure */
+//		, currentStateVariables &currentState
 )
 	{
 		printf("Including \n");
@@ -1058,7 +1059,7 @@ SCIP_RETCODE SCIPincludeDiversitreeBfs(
 		SCIP_CALL( SCIPsetNodeselFree(scip, nodesel, nodeselFreeDiversitreenode) );
 		SCIP_CALL( SCIPsetNodeselExitsol(scip, nodesel, nodeselExitsolDiversitreenode) );
 
-		CS = currentState;
+//		CS = currentState;
 
 		/* add node selector parameters */
 		SCIP_CALL(SCIPaddIntParam(scip, "nodeselection/" NODESEL_NAME "/minplungedepth", "minimal plunging depth, before new best node may be selected (-1 for dynamic setting)", &nodeseldata->minplungedepth, TRUE, MINPLUNGEDEPTH, -1, INT_MAX, NULL, NULL));//-1

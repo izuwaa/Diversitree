@@ -50,7 +50,7 @@ static std::vector<SCIP_Real> nodeVisited;
 //currentStateVariables *getCurrentState();
 
 SCIP_EXPORT
-SCIP_RETCODE SCIPincludeDiversitreeBfs(SCIP *scip /**< SCIP data structure */, currentStateVariables &currentState
+SCIP_RETCODE SCIPincludeDiversitreeBfs(SCIP *scip /**< SCIP data structure */
 );
 
 //#ifdef __cplusplus
