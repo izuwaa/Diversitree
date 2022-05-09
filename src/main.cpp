@@ -45,12 +45,12 @@ int main(int argc, char **argv)
 		std::string inputFileName = argv[1];
 		std::cout << " This is the name of the options file: " << inputFileName << " ........" << "\n";
 
-// Declare an options reader to read the problemOptions file and the solverOptions file
+		// Declare an options reader to read the problemOptions file and the solverOptions file
 		optionsReader optReader;
-// Lets start by reading the problemOptions file
+		// Lets start by reading the problemOptions file
 		char C = argv[3][0];
 		optReader.readOptions(argv[1], argv[2], C);
-// Then we add the solverOptions file to the same object. This way, we have all our options in one Object
+		// Then we add the solverOptions file to the same object. This way, we have all our options in one Object
 		C = argv[6][0];
 		optReader.readOptions(argv[4], argv[5], C);
 
@@ -85,26 +85,26 @@ int main(int argc, char **argv)
 
 										currentState.setComputeDiversity(optReader.m_computeDiversity);
 
-// Write the solutions or the Captured Diversity
+										// Write the solutions or the Captured Diversity
 										if (currentState.computeDiversity() == 1)
 											{//computeDiversity?  0 = Yes  Compute diversity, 1 = No Write captured solutions to file.
 
 												std::string csvFile = "";
-// Generate the solutions using the options set
+												// Generate the solutions using the options set
 												if (optReader.m_solverOption == "GAMS")
 													{
-/// We then Iterate through only the GAMS Related Items
-/// percentNearOptimal
-/// optimizationProblem
-/// requestedNumberSolutions
-/// computeDiversity
-/// computeDiversityFromCsv
-/// csvFile
+														/// We then Iterate through only the GAMS Related Items
+														/// percentNearOptimal
+														/// optimizationProblem
+														/// requestedNumberSolutions
+														/// computeDiversity
+														/// computeDiversityFromCsv
+														/// csvFile
 
-///Start by looping through the optimization problems
-/// Then for each optimizationProblem, generate the requested number of solutions given the percent near optimal
-/// Then either save the diversity or the generated solutions
-///
+														///Start by looping through the optimization problems
+														/// Then for each optimizationProblem, generate the requested number of solutions given the percent near optimal
+														/// Then either save the diversity or the generated solutions
+														///
 
 														std::string csvFile = optimizationProblem + "_gams" + "_percNO_" + std::to_string(currentState.percentNearOptimal()) + "_reqNS_" + std::to_string(currentState.requestedNumberOfSolutions()) + ".csv";
 														std::cout << "  Creating result file and storing it in: " << csvFile << " \n";
@@ -112,18 +112,18 @@ int main(int argc, char **argv)
 													}
 												else
 													{// We Iterate through the SCIP related items
-/// We then Iterate through only the GAMS Related Items
-/// percentNearOptimal
-/// optimizationProblem
-/// requestedNumberSolutions
-/// nodeType
-/// beta
-/// solCut
-/// depthCut
-/// alphaValue
-/// computeDiversity
-/// computeDiversityFromCsv
-/// csvFile
+														/// We then Iterate through only the GAMS Related Items
+														/// percentNearOptimal
+														/// optimizationProblem
+														/// requestedNumberSolutions
+														/// nodeType
+														/// beta
+														/// solCut
+														/// depthCut
+														/// alphaValue
+														/// computeDiversity
+														/// computeDiversityFromCsv
+														/// csvFile
 
 														for (unsigned long nodetype = 0; nodetype < optReader.m_nodeType.size();
 																nodetype++)
@@ -139,19 +139,19 @@ int main(int argc, char **argv)
 																				alpha < optReader.m_alphaValue.size(); alpha++)
 																			{// SET ALPHA
 
-//																				currentState.setAlphaValue(optReader.m_alphaValue[alpha]);
+																				//																				currentState.setAlphaValue(optReader.m_alphaValue[alpha]);
 
 																				for (unsigned long beta = 0;
 																						beta < optReader.m_betaValue.size(); beta++)
 																					{// SET BETA
 
-//																						currentState.setBetaValue(optReader.m_betaValue[beta]);
+																						//																						currentState.setBetaValue(optReader.m_betaValue[beta]);
 
 																						for (unsigned long solcut = 0;
 																								solcut < optReader.m_solutioncutoff.size();
 																								solcut++)
 																							{
-//																								currentState.setSolutioncutoff(optReader.m_solutioncutoff[solcut]);
+																								//																								currentState.setSolutioncutoff(optReader.m_solutioncutoff[solcut]);
 
 																								for (unsigned long depthcut = 0;
 																										depthcut < optReader.m_depthcutoff.size();
@@ -162,17 +162,17 @@ int main(int argc, char **argv)
 																										currentState.setBetaValue(optReader.m_betaValue[beta]);
 																										currentState.setSolutioncutoff(optReader.m_solutioncutoff[solcut]);
 																										currentState.setDepthcutoff(optReader.m_depthcutoff[depthcut]);
-//																										currentState.m_seenNodes.clear();
-//																										currentState.m_seenNodesMap.clear();
+																										//																										currentState.m_seenNodes.clear();
+																										//																										currentState.m_seenNodesMap.clear();
 
 																										if (currentState.alphaValue() > 0 and (currentState.alphaValue() + currentState.betaValue()) > 1)
 																											{
 																												currentState.setAlphaValue(1 - currentState.betaValue());
 																											}
-// alphaValue, 0, 0.01, 0.90, 0.18, 0.95
-// beta, 0.95, 0.06, 0.8, 1
+																										// alphaValue, 0, 0.01, 0.90, 0.18, 0.95
+																										// beta, 0.95, 0.06, 0.8, 1
 
-//Get a string representing the value combination of alpha, beta, solcut and depthcut seen so far
+																										//Get a string representing the value combination of alpha, beta, solcut and depthcut seen so far
 																										std::string checkval = std::to_string(currentState.alphaValue()) + "|" + std::to_string(currentState.betaValue()) + "|" + std::to_string(currentState.depthcutoff()) + "|" + std::to_string(currentState.solutioncutoff());
 																										int initialSize = currentState.m_seenValues.size();
 																										currentState.m_seenValues.insert(checkval);
@@ -195,21 +195,21 @@ int main(int argc, char **argv)
 																												resultWriter wr { csvFile, generatedSolutions.getSolutionsVector() };
 																												wr.writeSolutions_ToCsv();
 
-// NEW  CODE TO CAPTURE TO TIME AS WELL
+																												// NEW  CODE TO CAPTURE TO TIME AS WELL
 																												solutionStoreMap solutionsMap;
 
-// Add number of Solutions
+																												// Add number of Solutions
 																												solutionsMap.updateSolution(csvFile, "NumSols", std::to_string(currentState.requestedNumberOfSolutions()));
-// Add Time(ms)
+																												// Add Time(ms)
 																												solutionsMap.updateSolution(csvFile, "Time(ms)", std::to_string(currentState.getTimeSpent()));
 
-//THIS PORTION WRITES THE TIME IT TOOK TO GENERATE THE SOLUTIONS WRITTEN TO CSV
+																												//THIS PORTION WRITES THE TIME IT TOOK TO GENERATE THE SOLUTIONS WRITTEN TO CSV
 																												std::string runTimeCSVFile = std::string("SCIP_Runtime") + std::string("_percNO_") + std::to_string(currentState.percentNearOptimal()) + std::string("_.csv");
 																												if (fileAddCounter == 0)// fileAddCounter == 0 means we are just beginning to write in the file
 																													{
 																														resultWriter wr { csvFile, solutionsMap.getSolutionsMap() };
 
-//                                std::cout << "This is k: " << k << " This is the headstate0 : " << wr.getHeaderState() << std::endl;
+																														//                                std::cout << "This is k: " << k << " This is the headstate0 : " << wr.getHeaderState() << std::endl;
 																														wr.writeDiversity_ToCsv(solutionsMap, runTimeCSVFile);
 																														fileAddCounter = 1;
 
@@ -217,7 +217,7 @@ int main(int argc, char **argv)
 																												else
 																													{
 																														resultWriter wr { csvFile, solutionsMap.getSolutionsMap(), 2 };
-//                                std::cout << "This is k: " << k <<  " This is the headstate2 : " << wr.getHeaderState() << std::endl;
+																														//                                std::cout << "This is k: " << k <<  " This is the headstate2 : " << wr.getHeaderState() << std::endl;
 																														wr.writeDiversity_ToCsv(solutionsMap, runTimeCSVFile);
 																													}
 
@@ -245,32 +245,32 @@ int main(int argc, char **argv)
 																		solutionStoreVector generatedSolutions;// Holds the generated solutions
 																		multiSolGenerator.generateSolutionsFromMIP(generatedSolutions, currentState);
 
-//																		std::string csvFile = optimizationProblem + "_SCIP" + "_percNO_" + std::to_string(currentState.percentNearOptimal()) + "_reqNS_" + std::to_string(currentState.requestedNumberOfSolutions()) + "_alpha_" + std::to_string(currentState.alphaValue()) + "_beta_" + std::to_string(currentState.betaValue()) + "_solCut_" + std::to_string(currentState.solutioncutoff()) + "_depthCut_" + std::to_string(currentState.depthcutoff()) + ".csv";
+																		//																		std::string csvFile = optimizationProblem + "_SCIP" + "_percNO_" + std::to_string(currentState.percentNearOptimal()) + "_reqNS_" + std::to_string(currentState.requestedNumberOfSolutions()) + "_alpha_" + std::to_string(currentState.alphaValue()) + "_beta_" + std::to_string(currentState.betaValue()) + "_solCut_" + std::to_string(currentState.solutioncutoff()) + "_depthCut_" + std::to_string(currentState.depthcutoff()) + ".csv";
 																		std::string csvFile = optimizationProblem + "_SCIP_" + std::string(currentState.getMNodeType()) + "_percNO_" + std::to_string(currentState.percentNearOptimal()) + "_reqNS_" + std::to_string(currentState.requestedNumberOfSolutions()) + "_alpha_" + std::to_string(currentState.alphaValue()) + "_beta_" + std::to_string(currentState.betaValue()) + "_solCut_" + std::to_string(currentState.solutioncutoff()) + "_depthCut_" + std::to_string(currentState.depthcutoff()) + ".csv";
 																		std::cout << "  Creating result file and storing it in: " << csvFile << " \n";
 
 																		std::chrono::duration<double, std::milli> timeSpent = currentState.getStopTime() - currentState.getStartTime();
 																		currentState.setTimeSpent(timeSpent.count());
 
-// TODO add a method here that if DBIN then we need to select on the Binary locations
+																		// TODO add a method here that if DBIN then we need to select on the Binary locations
 																		resultWriter wr { csvFile, generatedSolutions.getSolutionsVector() };
 																		wr.writeSolutions_ToCsv();
 
-// NEW  CODE TO CAPTURE TO TIME AS WELL
+																		// NEW  CODE TO CAPTURE TO TIME AS WELL
 																		solutionStoreMap solutionsMap;
 
-// Add number of Solutions
+																		// Add number of Solutions
 																		solutionsMap.updateSolution(csvFile, "NumSols", std::to_string(currentState.requestedNumberOfSolutions()));
-// Add Time(ms)
+																		// Add Time(ms)
 																		solutionsMap.updateSolution(csvFile, "Time(ms)", std::to_string(currentState.getTimeSpent()));
 
-//THIS PORTION WRITES THE TIME IT TOOK TO GENERATE THE SOLUTIONS WRITTEN TO CSV
+																		//THIS PORTION WRITES THE TIME IT TOOK TO GENERATE THE SOLUTIONS WRITTEN TO CSV
 																		std::string runTimeCSVFile = std::string("SCIP_Runtime") + std::string("_percNO_") + std::to_string(currentState.percentNearOptimal()) + std::string("_.csv");
 																		if (fileAddCounter == 0)// fileAddCounter == 0 means we are just beginning to write in the file
 																			{
 																				resultWriter wr { csvFile, solutionsMap.getSolutionsMap() };
 
-//                                std::cout << "This is k: " << k << " This is the headstate0 : " << wr.getHeaderState() << std::endl;
+																				//                                std::cout << "This is k: " << k << " This is the headstate0 : " << wr.getHeaderState() << std::endl;
 																				wr.writeDiversity_ToCsv(solutionsMap, runTimeCSVFile);
 																				fileAddCounter = 1;
 
@@ -278,7 +278,7 @@ int main(int argc, char **argv)
 																		else
 																			{
 																				resultWriter wr { csvFile, solutionsMap.getSolutionsMap(), 2 };
-//                                std::cout << "This is k: " << k <<  " This is the headstate2 : " << wr.getHeaderState() << std::endl;
+																				//                                std::cout << "This is k: " << k <<  " This is the headstate2 : " << wr.getHeaderState() << std::endl;
 																				wr.writeDiversity_ToCsv(solutionsMap, runTimeCSVFile);
 																			}
 
@@ -295,18 +295,18 @@ int main(int argc, char **argv)
 												std::string csvFile = "";
 												if (optReader.m_solverOption == "GAMS")
 													{
-/// We then Iterate through only the GAMS Related Items
-/// percentNearOptimal
-/// optimizationProblem
-/// requestedNumberSolutions
-/// computeDiversity
-/// computeDiversityFromCsv
-/// csvFile
+														/// We then Iterate through only the GAMS Related Items
+														/// percentNearOptimal
+														/// optimizationProblem
+														/// requestedNumberSolutions
+														/// computeDiversity
+														/// computeDiversityFromCsv
+														/// csvFile
 
-///Start by looping through the optimization problems
-/// Then for each optimizationProblem, generate the requested number of solutions given the percent near optimal
-/// Then either save the diversity or the generated solutions
-///
+														///Start by looping through the optimization problems
+														/// Then for each optimizationProblem, generate the requested number of solutions given the percent near optimal
+														/// Then either save the diversity or the generated solutions
+														///
 
 														std::string csvFile = optimizationProblem + "_gams_diversity" + "_percNO_" + std::to_string(currentState.percentNearOptimal()) + "_reqNS_" + std::to_string(currentState.requestedNumberOfSolutions()) + ".csv";
 														printf("Creating result file and storing it in: %s \n", csvFile.c_str());
@@ -314,24 +314,24 @@ int main(int argc, char **argv)
 													}// END GAMS; COMPUTE DIVERSITY
 												else
 													{// We Iterate through the SCIP related items
-/// We then Iterate through only the GAMS Related Items
-/// percentNearOptimal
-/// optimizationProblem
-/// requestedNumberSolutions
-/// nodeType
-/// beta
-/// solCut
-/// depthCut
-/// alphaValue
-/// computeDiversity
-/// computeDiversityFromCsv
-/// csvFile
+														/// We then Iterate through only the GAMS Related Items
+														/// percentNearOptimal
+														/// optimizationProblem
+														/// requestedNumberSolutions
+														/// nodeType
+														/// beta
+														/// solCut
+														/// depthCut
+														/// alphaValue
+														/// computeDiversity
+														/// computeDiversityFromCsv
+														/// csvFile
 
 														for (unsigned long nodetype = 0; nodetype < optReader.m_nodeType.size();
 																nodetype++)
 															{
 
-//																printf("\n This is the nodeTYPE %i: \n",optReader.m_nodeType[nodetype]);
+																//																printf("\n This is the nodeTYPE %i: \n",optReader.m_nodeType[nodetype]);
 																currentState.m_seenValues.clear();
 
 																if (optReader.m_nodeType[nodetype] == 0)
@@ -343,19 +343,19 @@ int main(int argc, char **argv)
 																				alpha < optReader.m_alphaValue.size(); alpha++)
 																			{// SET ALPHA
 
-//																				currentState.setAlphaValue(optReader.m_alphaValue[alpha]);
+																				//																				currentState.setAlphaValue(optReader.m_alphaValue[alpha]);
 
 																				for (unsigned long beta = 0;
 																						beta < optReader.m_betaValue.size(); beta++)
 																					{// SET BETA
 
-//																						currentState.setBetaValue(optReader.m_betaValue[beta]);
+																						//																						currentState.setBetaValue(optReader.m_betaValue[beta]);
 
 																						for (unsigned long solcut = 0;
 																								solcut < optReader.m_solutioncutoff.size();
 																								solcut++)
 																							{
-//																								currentState.setSolutioncutoff(optReader.m_solutioncutoff[solcut]);
+																								//																								currentState.setSolutioncutoff(optReader.m_solutioncutoff[solcut]);
 
 																								for (unsigned long depthcut = 0;
 																										depthcut < optReader.m_depthcutoff.size();
@@ -366,32 +366,32 @@ int main(int argc, char **argv)
 																										currentState.setBetaValue(optReader.m_betaValue[beta]);
 																										currentState.setSolutioncutoff(optReader.m_solutioncutoff[solcut]);
 																										currentState.setDepthcutoff(optReader.m_depthcutoff[depthcut]);
-//																										currentState.m_seenNodes.clear();
-//																										currentState.m_seenNodesMap.clear();
+																										//																										currentState.m_seenNodes.clear();
+																										//																										currentState.m_seenNodesMap.clear();
 
 																										if (currentState.alphaValue() > 0 and (currentState.alphaValue() + currentState.betaValue()) > 1)
 																											{
 																												currentState.setAlphaValue(1 - currentState.betaValue());
 																											}
 
-//Get a string representing the value combination of alpha, beta, solcut and depthcut seen so far
+																										//Get a string representing the value combination of alpha, beta, solcut and depthcut seen so far
 																										std::string checkval = std::to_string(currentState.alphaValue()) + "|" + std::to_string(currentState.betaValue()) + "|" + std::to_string(currentState.depthcutoff()) + "|" + std::to_string(currentState.solutioncutoff());
 																										int initialSize = currentState.m_seenValues.size();
 																										currentState.m_seenValues.insert(checkval);
 																										int newSize = currentState.m_seenValues.size();
 
-//																										printf("\n INITIALSIZE: %i , NEWSIZE: %i: \n",initialSize, newSize);
+																										//																										printf("\n INITIALSIZE: %i , NEWSIZE: %i: \n",initialSize, newSize);
 
 																										if ((newSize - initialSize) > 0)
 																											{// We have a new alpha, beta, depthcut, solcut combination - start phase 2
 
-//																												printf("\n This is the nodeTYPE %i: \n",optReader.m_nodeType[nodetype]);
+																												//																												printf("\n This is the nodeTYPE %i: \n",optReader.m_nodeType[nodetype]);
 
 																												branchCountScip multiSolGenerator(optReader);
 																												solutionStoreVector generatedSolutions;// Holds the generated solutions
 																												multiSolGenerator.generateSolutionsFromMIP(generatedSolutions, currentState);
 
-//																												std::string csvFile = optimizationProblem + "_SCIP_diversity" + "_percNO_" + std::to_string(currentState.percentNearOptimal()) + "_reqNS_" + std::to_string(currentState.requestedNumberOfSolutions()) + "_alpha_" + std::to_string(currentState.alphaValue()) + "_beta_" + std::to_string(currentState.betaValue()) + "_solCut_" + std::to_string(currentState.solutioncutoff()) + "_depthCut_" + std::to_string(currentState.depthcutoff()) + ".csv";
+																												//																												std::string csvFile = optimizationProblem + "_SCIP_diversity" + "_percNO_" + std::to_string(currentState.percentNearOptimal()) + "_reqNS_" + std::to_string(currentState.requestedNumberOfSolutions()) + "_alpha_" + std::to_string(currentState.alphaValue()) + "_beta_" + std::to_string(currentState.betaValue()) + "_solCut_" + std::to_string(currentState.solutioncutoff()) + "_depthCut_" + std::to_string(currentState.depthcutoff()) + ".csv";
 																												std::string csvFile = std::string("SCIP_diversity") + std::string("_percNO_") + std::to_string(currentState.percentNearOptimal()) + std::string(".csv");
 																												std::cout << "  Creating result file and storing it in: " << csvFile << " \n";
 
@@ -404,11 +404,11 @@ int main(int argc, char **argv)
 																												solutionStoreMap solutionsMap;
 																												std::string recordName = currentState.optimizationProblems() + "(" + std::to_string(currentState.requestedNumberOfSolutions()) + ")";
 																												std::string solver = currentState.getMNodeType() + "_";
-// Add Diversity
+																												// Add Diversity
 																												solutionsMap.updateSolution(recordName, "diversity", std::to_string(currentState.getDiversity()));
-// Add number of Solutions
+																												// Add number of Solutions
 																												solutionsMap.updateSolution(recordName, "NumSols", std::to_string(currentState.requestedNumberOfSolutions()));
-// Add Time(ms)
+																												// Add Time(ms)
 																												solutionsMap.updateSolution(recordName, "Time(ms)", std::to_string(currentState.getTimeSpent()));
 
 																												solutionsMap.updateSolution(recordName, "Alpha", std::to_string(currentState.alphaValue()));
@@ -418,13 +418,13 @@ int main(int argc, char **argv)
 																												solutionsMap.updateSolution(recordName, "SolCut", std::to_string(currentState.solutioncutoff()));
 
 																												solutionsMap.updateSolution(recordName, "DepthCut", std::to_string(currentState.depthcutoff()));
-// Add Nodes Processed
+																												// Add Nodes Processed
 																												solutionsMap.updateSolution(recordName, "NodesProcessed", "0");
-// Add Node Processing type
+																												// Add Node Processing type
 																												solutionsMap.updateSolution(recordName, "nodeType", currentState.getMNodeType());
-// Add NearOptimal Percent
+																												// Add NearOptimal Percent
 																												solutionsMap.updateSolution(recordName, "PercentNearOptimal", std::to_string(currentState.percentNearOptimal()));
-// Add Number of solutions generated
+																												// Add Number of solutions generated
 																												solutionsMap.updateSolution(recordName, "NumberofGeneratedSolutions", std::to_string(currentState.numberSolutionsGenerated()));
 
 																												std::cout << "  This is the calculated diversity: " << currentState.getDiversity() << " . It took " << currentState.getTimeSpent() << " secs to compute." << "\n";
@@ -433,7 +433,7 @@ int main(int argc, char **argv)
 																													{
 																														resultWriter wr { csvFile, solutionsMap.getSolutionsMap() };
 
-//                                std::cout << "This is k: " << k << " This is the headstate0 : " << wr.getHeaderState() << std::endl;
+																														//                                std::cout << "This is k: " << k << " This is the headstate0 : " << wr.getHeaderState() << std::endl;
 																														wr.writeDiversity_ToCsv(solutionsMap);
 																														fileAddCounter = 1;
 
@@ -441,7 +441,7 @@ int main(int argc, char **argv)
 																												else
 																													{
 																														resultWriter wr { csvFile, solutionsMap.getSolutionsMap(), 2 };
-//                                std::cout << "This is k: " << k <<  " This is the headstate2 : " << wr.getHeaderState() << std::endl;
+																														//                                std::cout << "This is k: " << k <<  " This is the headstate2 : " << wr.getHeaderState() << std::endl;
 																														wr.writeDiversity_ToCsv(solutionsMap);
 																													}
 
@@ -469,24 +469,26 @@ int main(int argc, char **argv)
 																		solutionStoreVector generatedSolutions;// Holds the generated solutions
 																		multiSolGenerator.generateSolutionsFromMIP(generatedSolutions, currentState);
 
-//																		std::string csvFile = optimizationProblem + "_SCIP_diversity" + "_percNO_" + std::to_string(currentState.percentNearOptimal()) + "_reqNS_" + std::to_string(currentState.requestedNumberOfSolutions()) + "_alpha_" + std::to_string(currentState.alphaValue()) + "_beta_" + std::to_string(currentState.betaValue()) + "_solCut_" + std::to_string(currentState.solutioncutoff()) + "_depthCut_" + std::to_string(currentState.depthcutoff()) + ".csv";
+																		//																		std::string csvFile = optimizationProblem + "_SCIP_diversity" + "_percNO_" + std::to_string(currentState.percentNearOptimal()) + "_reqNS_" + std::to_string(currentState.requestedNumberOfSolutions()) + "_alpha_" + std::to_string(currentState.alphaValue()) + "_beta_" + std::to_string(currentState.betaValue()) + "_solCut_" + std::to_string(currentState.solutioncutoff()) + "_depthCut_" + std::to_string(currentState.depthcutoff()) + ".csv";
 																		std::string csvFile = std::string("SCIP_diversity") + std::string("_percNO_") + std::to_string(currentState.percentNearOptimal()) + std::string(".csv");
 																		std::cout << "  Creating result file and storing it in: " << csvFile << " \n";
 
 																		std::chrono::duration<double, std::milli> timeSpent = currentState.getStopTime() - currentState.getStartTime();
 																		currentState.setTimeSpent(timeSpent.count());
 
-																		diversityCalculator divCalc(generatedSolutions);
-																		divCalc.dbinAll(currentState);
+																		if (generatedSolutions.m_solutionsVector.size() >= 0){
+																				diversityCalculator divCalc(generatedSolutions);
+																				divCalc.dbinAll(currentState);
+																		}
 
 																		solutionStoreMap solutionsMap;
 																		std::string recordName = currentState.optimizationProblems() + "(" + std::to_string(currentState.requestedNumberOfSolutions()) + ")";
 																		std::string solver = currentState.getMNodeType() + "_";
-// Add Diversity
+																		// Add Diversity
 																		solutionsMap.updateSolution(recordName, "diversity", std::to_string(currentState.getDiversity()));
-// Add number of Solutions
+																		// Add number of Solutions
 																		solutionsMap.updateSolution(recordName, "NumSols", std::to_string(currentState.requestedNumberOfSolutions()));
-// Add Time(ms)
+																		// Add Time(ms)
 																		solutionsMap.updateSolution(recordName, "Time(ms)", std::to_string(currentState.getTimeSpent()));
 
 																		solutionsMap.updateSolution(recordName, "Alpha", std::to_string(currentState.alphaValue()));
@@ -496,13 +498,13 @@ int main(int argc, char **argv)
 																		solutionsMap.updateSolution(recordName, "SolCut", std::to_string(currentState.solutioncutoff()));
 
 																		solutionsMap.updateSolution(recordName, "DepthCut", std::to_string(currentState.depthcutoff()));
-// Add Nodes Processed
+																		// Add Nodes Processed
 																		solutionsMap.updateSolution(recordName, "NodesProcessed", "0");
-// Add Node Processing type
+																		// Add Node Processing type
 																		solutionsMap.updateSolution(recordName, "nodeType", currentState.getMNodeType());
-// Add NearOptimal Percent
+																		// Add NearOptimal Percent
 																		solutionsMap.updateSolution(recordName, "PercentNearOptimal", std::to_string(currentState.percentNearOptimal()));
-// Add Number of solutions generated
+																		// Add Number of solutions generated
 																		solutionsMap.updateSolution(recordName, "NumberofGeneratedSolutions", std::to_string(currentState.numberSolutionsGenerated()));
 
 																		std::cout << "  This is the calculated diversity: " << currentState.getDiversity() << " . It took " << currentState.getTimeSpent() << " secs to compute." << "\n";
@@ -511,7 +513,7 @@ int main(int argc, char **argv)
 																			{
 																				resultWriter wr { csvFile, solutionsMap.getSolutionsMap() };
 
-//                                std::cout << "This is k: " << k << " This is the headstate0 : " << wr.getHeaderState() << std::endl;
+																				//                                std::cout << "This is k: " << k << " This is the headstate0 : " << wr.getHeaderState() << std::endl;
 																				wr.writeDiversity_ToCsv(solutionsMap);
 																				fileAddCounter = 1;
 
@@ -519,7 +521,7 @@ int main(int argc, char **argv)
 																		else
 																			{
 																				resultWriter wr { csvFile, solutionsMap.getSolutionsMap(), 2 };
-//                                std::cout << "This is k: " << k <<  " This is the headstate2 : " << wr.getHeaderState() << std::endl;
+																				//                                std::cout << "This is k: " << k <<  " This is the headstate2 : " << wr.getHeaderState() << std::endl;
 																				wr.writeDiversity_ToCsv(solutionsMap);
 																			}
 
@@ -541,14 +543,14 @@ int main(int argc, char **argv)
 		else
 			{//We have the CSV  -  generate the Diversities
 
-///
-/// Start by looping through the csvFiles
-/// Then for each csvFile, generate the diversity of the requestednumberofsolutions
-/// Then either save the diversity
-///
+				///
+				/// Start by looping through the csvFiles
+				/// Then for each csvFile, generate the diversity of the requestednumberofsolutions
+				/// Then either save the diversity
+				///
 
 				fileAddCounter = 0;
-//		currentStateVariables currentState;
+				//		currentStateVariables currentState;
 				std::vector<std::string> nameVector { };
 				std::cout << "Number of csvFiles: " << optReader.m_csvFiles.size() << "\n";
 				currentState.setPMostDiverse(optReader.m_pMostDiverseSolutions);
@@ -556,10 +558,10 @@ int main(int argc, char **argv)
 
 				std::cout << "This is p Most Diverse: " << currentState.pMostDiverse() << "\n";
 
-// ----------------------------------------------------------------------------------------------------------------------
-// ----------------------------------- USE THIS SECTION TO GET THE NAMES OF A LOT OF CSV --------------------------------
-// ----------------------------------- put  them in the allCSVFiles  Folder ---------------------------------------------
-// ----------------------------------------------------------------------------------------------------------------------
+				// ----------------------------------------------------------------------------------------------------------------------
+				// ----------------------------------- USE THIS SECTION TO GET THE NAMES OF A LOT OF CSV --------------------------------
+				// ----------------------------------- put  them in the allCSVFiles  Folder ---------------------------------------------
+				// ----------------------------------------------------------------------------------------------------------------------
 				DIR *directory;
 				struct dirent *en;
 
@@ -571,7 +573,7 @@ int main(int argc, char **argv)
 					{
 						while ((en = readdir(directory)) != NULL)
 							{
-//                printf("%s\n", en ->d_name);
+								//                printf("%s\n", en ->d_name);
 								allcsvFiles.push_back(en->d_name);
 							}
 						printf("\n First bad Element: %s \n", allcsvFiles[0].c_str());
@@ -594,23 +596,23 @@ int main(int argc, char **argv)
 						optReader.m_csvFiles.push_back(allcsvFiles[i]);
 					}
 
-//                std::sort(optReader.m_csvFiles.begin(),optReader.m_csvFiles.end());
+				//                std::sort(optReader.m_csvFiles.begin(),optReader.m_csvFiles.end());
 				std::cout << "\n Length of csvFiles: " << optReader.m_csvFiles.size() << "\n First file name is: " << optReader.m_csvFiles[0] << std::endl;
 
-// ----------------------------------------------------------------------------------------------------------------------
-// ----------------------------------------------------------------------------------------------------------------------
-// ----------------------------------------------------------------------------------------------------------------------
+				// ----------------------------------------------------------------------------------------------------------------------
+				// ----------------------------------------------------------------------------------------------------------------------
+				// ----------------------------------------------------------------------------------------------------------------------
 
-//TODO change this line to optReader.m_csvFiles.size()
+				//TODO change this line to optReader.m_csvFiles.size()
 				for (int x = 0; x < static_cast<int>(optReader.m_csvFiles.size()); x++)
 					{
 
 						nameVector.clear();
-//TODO change this line to optReader.m_csvFiles[x]
+						//TODO change this line to optReader.m_csvFiles[x]
 						currentState.setCsvFiles(optReader.m_csvFiles[x]);
 						std::string fileName = currentState.csvFiles();
 
-//            std::cout << "FName: " << fileName << std::endl;
+						//            std::cout << "FName: " << fileName << std::endl;
 
 						std::stringstream ss(fileName);
 						std::string vals;
@@ -622,9 +624,9 @@ int main(int argc, char **argv)
 								nameVector.push_back(vals);
 							}
 
-//            pp08aCUTS.mps_100_CBFS_qp_0.01|0.00|0.06|0.05
+						//            pp08aCUTS.mps_100_CBFS_qp_0.01|0.00|0.06|0.05
 
-// TODO Change how this works; Make sure all files have same output name format.
+						// TODO Change how this works; Make sure all files have same output name format.
 						if (nameVector.size() == 5)
 							{// We are stripping solutions from SCIP on the old system
 
@@ -671,7 +673,7 @@ int main(int argc, char **argv)
 
 						solutionsGenerator multiSolGenerator(optReader);
 						solutionStoreVector generatedSolutions;// Read the solutions from the CSV and holds the generated solutions
-//            generatedSolutions = multiSolGenerator.getSolutionsFromCSV(currentState);
+						//            generatedSolutions = multiSolGenerator.getSolutionsFromCSV(currentState);
 
 						diversityCalculator divCalc(generatedSolutions);
 						currentState.setStartTime(std::chrono::high_resolution_clock::now());
@@ -685,31 +687,31 @@ int main(int argc, char **argv)
 
 						std::string recordName = currentState.optimizationProblems() + "(" + std::to_string(currentState.requestedNumberOfSolutions()) + ")";
 						std::string nodeType = currentState.solverOption();
-// Add Diversity
+						// Add Diversity
 						solutionsMap.updateSolution(recordName, "diversity", std::to_string(currentState.getDiversity()));
-// Add number of Solutions
+						// Add number of Solutions
 						solutionsMap.updateSolution(recordName, "NumSols", std::to_string(currentState.requestedNumberOfSolutions()));
-// Add pMostDiverse
+						// Add pMostDiverse
 						solutionsMap.updateSolution(recordName, "pMostDiverse", std::to_string(currentState.pMostDiverse()));
-// Add Node Processing type
+						// Add Node Processing type
 						solutionsMap.updateSolution(recordName, "nodeType", nodeType);
-// Add NearOptimal Percent
+						// Add NearOptimal Percent
 						solutionsMap.updateSolution(recordName, "PercentNearOptimal", std::to_string(currentState.percentNearOptimal()));
-// Add Number of solutions generated
+						// Add Number of solutions generated
 						solutionsMap.updateSolution(recordName, "NumberofGeneratedSolutions", std::to_string(currentState.numberSolutionsGenerated()));
-// Add Number of solutions Alpha
+						// Add Number of solutions Alpha
 						solutionsMap.updateSolution(recordName, "Alpha", std::to_string(currentState.alphaValue()));
-// Add Number of solutions Beta
+						// Add Number of solutions Beta
 						solutionsMap.updateSolution(recordName, "Beta", std::to_string(currentState.betaValue()));
-// Add Number of solutions SolCut
+						// Add Number of solutions SolCut
 						solutionsMap.updateSolution(recordName, "SolCut", std::to_string(currentState.solutioncutoff()));
-// Add Time(ms)
+						// Add Time(ms)
 						solutionsMap.updateSolution(recordName, "LocSearchTime(ms)", std::to_string(currentState.getTimeSpent()));
 
 						if (fileAddCounter == 0)
 							{
 								resultWriter wr { csvFile, solutionsMap.getSolutionsMap() };
-//                std::cout << "This is k: " << k << " This is the headstate0 : " << wr.getHeaderState() << std::endl;
+								//                std::cout << "This is k: " << k << " This is the headstate0 : " << wr.getHeaderState() << std::endl;
 								wr.writeDiversity_ToCsv(solutionsMap);
 								fileAddCounter = 1;
 
@@ -717,7 +719,7 @@ int main(int argc, char **argv)
 						else
 							{
 								resultWriter wr { csvFile, solutionsMap.getSolutionsMap(), 2 };
-//                std::cout << "This is k: " << k <<  " This is the headstate2 : " << wr.getHeaderState() << std::endl;
+								//                std::cout << "This is k: " << k <<  " This is the headstate2 : " << wr.getHeaderState() << std::endl;
 								wr.writeDiversity_ToCsv(solutionsMap);
 							}
 
@@ -727,7 +729,7 @@ int main(int argc, char **argv)
 
 			}
 
-//    return 0;
+		//    return 0;
 	}
 
 //    wsInfo.setWorkingDirectory("/Library/Frameworks/GAMS.framework/Versions/38/Resources/apifiles/C++/IzuwaTest/tGams/testGAMS");

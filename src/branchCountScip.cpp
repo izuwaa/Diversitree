@@ -34,6 +34,9 @@ typedef SCIP_Longint         Int;
  113  */
 #define CUTOFF_CONSTRAINT(x) SCIP_RETCODE x (SCIP* scip, SCIP_SOL* sol, SCIP_CONSHDLRDATA* conshdlrdata)
 
+
+
+
 /** constraint handler data */
 struct SCIP_ConshdlrData
 	{
