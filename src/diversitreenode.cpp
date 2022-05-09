@@ -95,6 +95,7 @@ SCIP_RETCODE expandMemorySize(
 		/* if array has not been allocated yet, do this now with default initial capacity */
 		if( nodeVisited.size() <= 0 )
 			{
+				printf("I am Initializing, resizing node visits array, old capacity: %d new capacity : %d\n", nodeVisited.size(), INITIALSIZE);
 				//				SCIP_CALL( SCIPallocClearMemoryArray(scip, &nodeseldata->nodevisit, INITIALSIZE) ); /*lint !e506*/
 				//				nodeseldata->sizenodevisit = INITIALSIZE;
 
