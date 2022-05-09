@@ -12,6 +12,9 @@
 #include <iostream>
 #include "currentStateVariables.h"
 
+extern currentStateVariables curStateVariables;
+
+
 class utilities
 	{
 	public:

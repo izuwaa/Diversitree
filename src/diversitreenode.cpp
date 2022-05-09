@@ -632,7 +632,7 @@ void getLBScore(float node1LB, float node2LB, float objectiveLimit, float &node1
 	{
 
 		//		float minVal = std::min( { (float) Optimum_Obj, node1LB, node2LB });
-		float minVal = std::min( { (float)(CS.getMBestObjective()), node1LB, node2LB });
+		float minVal = std::min( { (float)(curStateVariables.getMBestObjective()), node1LB, node2LB });
 
 		node1Score = (node1LB - minVal) / (objectiveLimit - minVal);
 		node2Score = (node2LB - minVal) / (objectiveLimit - minVal);
@@ -716,9 +716,9 @@ SCIP_DECL_NODESELCOMP(nodeselCompDiversitreenode)
 		nodeseldata->maximumDepth = maxDepth;
 
 
-		bool depthCutOffTest = CS.depthcutoff() == 0 or maxDepth >= CS.depthcutoff();
-		bool solCutOffTest = CS.solutioncutoff() == 0 or ( nsols > 0 and  nsols >= (CS.solutioncutoff() * CS.requestedNumberOfSolutions()  ) );
-		bool alphaTest = CS.alphaValue() > 0 or CS.betaValue() > 0;
+		bool depthCutOffTest = curStateVariables.depthcutoff() == 0 or maxDepth >= curStateVariables.depthcutoff();
+		bool solCutOffTest = curStateVariables.solutioncutoff() == 0 or ( nsols > 0 and  nsols >= (curStateVariables.solutioncutoff() * curStateVariables.requestedNumberOfSolutions()  ) );
+		bool alphaTest = curStateVariables.alphaValue() > 0 or curStateVariables.betaValue() > 0;
 
 
 
@@ -808,10 +808,10 @@ SCIP_DECL_NODESELCOMP(nodeselCompDiversitreenode)
 
 						optionsReader opt;
 						branchCountScip bcs(opt);
-						bcs.getNodeDiversityValarray(scip, nd1Map, nd2Map, cNode1, cNode2, nsols != nodeseldata->countedSoFar, node1Div, node2Div, (int) SCIPnodeGetNumber(node1), (int) SCIPnodeGetNumber(node2), nd1Selector, nd2Selector, CS);
+						bcs.getNodeDiversityValarray(scip, nd1Map, nd2Map, cNode1, cNode2, nsols != nodeseldata->countedSoFar, node1Div, node2Div, (int) SCIPnodeGetNumber(node1), (int) SCIPnodeGetNumber(node2), nd1Selector, nd2Selector);
 
 						nodeseldata->countedSoFar = nsols;
-						CS.setMCountedSolutionsSoFar(nsols);
+						curStateVariables.setMCountedSolutionsSoFar(nsols);
 
 						//						printf("This is Counted so far AFTER: %d :--: %d  :--: %d \n", cState->getMCountedSolutionsSoFar(), nodeseldata->countedSoFar, nsols);
 
@@ -872,18 +872,18 @@ SCIP_DECL_NODESELCOMP(nodeselCompDiversitreenode)
 				float scaledDepth1 { };
 				float scaledDepth2 { };
 
-				getLBScore((float) SCIPnodeGetLowerbound(node1), (float) SCIPnodeGetLowerbound(node2), CS.getMBestObjective(), scaledLB1, scaledLB2);
+				getLBScore((float) SCIPnodeGetLowerbound(node1), (float) SCIPnodeGetLowerbound(node2), curStateVariables.getMBestObjective(), scaledLB1, scaledLB2);
 				getDepthScore((float) SCIPnodeGetDepth(node1), (float) SCIPnodeGetDepth(node2), (float) minplungedepth, (float) maxplungedepth, scaledDepth1, scaledDepth2);
 
 				//		lbAlpha = 1 - (alpha + beta);
-				lbAlpha = 1 - (CS.alphaValue() + CS.betaValue());
+				lbAlpha = 1 - (curStateVariables.alphaValue() + curStateVariables.betaValue());
 				if (lbAlpha < 0)
 					{
 						lbAlpha = 0;
 					}
 
-				lowerbound1 = (lbAlpha) * scaledLB1 + (CS.alphaValue() * (2 * node1Div)) + (CS.betaValue() * scaledDepth1);
-				lowerbound2 = (lbAlpha) * scaledLB2 + (CS.alphaValue() * (2 * node2Div)) + (CS.betaValue() * scaledDepth2);
+				lowerbound1 = (lbAlpha) * scaledLB1 + (curStateVariables.alphaValue() * (2 * node1Div)) + (curStateVariables.betaValue() * scaledDepth1);
+				lowerbound2 = (lbAlpha) * scaledLB2 + (curStateVariables.alphaValue() * (2 * node2Div)) + (curStateVariables.betaValue() * scaledDepth2);
 
 
 		}
@@ -928,7 +928,7 @@ SCIP_DECL_NODESELCOMP(nodeselCompDiversitreenode)
 						float scaledDepth1 { };
 						float scaledDepth2 { };
 
-						lbAlpha = 1 - (CS.alphaValue() + CS.betaValue());
+						lbAlpha = 1 - (curStateVariables.alphaValue() + curStateVariables.betaValue());
 						if (lbAlpha < 0)
 							{
 								lbAlpha = 0;
@@ -937,11 +937,11 @@ SCIP_DECL_NODESELCOMP(nodeselCompDiversitreenode)
 
 
 						//				getLBScore((float) SCIPnodeGetEstimate(node1), (float) SCIPnodeGetEstimate(node2), (float) SCIPgetObjlimit(scip), scaledLBEstimate1, scaledLBEstimate2);
-						getLBScore((float) SCIPnodeGetEstimate(node1), (float) SCIPnodeGetEstimate(node2), CS.getMBestObjective(), scaledLBEstimate1, scaledLBEstimate2);
+						getLBScore((float) SCIPnodeGetEstimate(node1), (float) SCIPnodeGetEstimate(node2), curStateVariables.getMBestObjective(), scaledLBEstimate1, scaledLBEstimate2);
 						getDepthScore((float) SCIPnodeGetDepth(node1), (float) SCIPnodeGetDepth(node2), (float) minplungedepth, (float) maxplungedepth, scaledDepth1, scaledDepth2);
 
-						estimate1 = (lbAlpha) * scaledLBEstimate1 + (CS.alphaValue() * (2 * node1Div)) + (CS.betaValue() * scaledDepth1);
-						estimate2 = (lbAlpha) * scaledLBEstimate2 + (CS.alphaValue() * (2 * node2Div)) + (CS.betaValue() * scaledDepth2);
+						estimate1 = (lbAlpha) * scaledLBEstimate1 + (curStateVariables.alphaValue() * (2 * node1Div)) + (curStateVariables.betaValue() * scaledDepth1);
+						estimate2 = (lbAlpha) * scaledLBEstimate2 + (curStateVariables.alphaValue() * (2 * node2Div)) + (curStateVariables.betaValue() * scaledDepth2);
 
 				}
 				else{

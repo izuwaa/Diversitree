@@ -40,8 +40,8 @@ extern "C" {
  *  @ingroup NodeSelectorIncludes
  */
 
-static currentStateVariables CS;
-static std::vector<SCIP_Real> nodeVisited;
+//static currentStateVariables CS;
+//static std::vector<SCIP_Real> nodeVisited;
 
 //static
 //void setCurrentState(currentStateVariables *currentState);

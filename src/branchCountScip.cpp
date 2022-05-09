@@ -34,6 +34,7 @@ typedef SCIP_Longint         Int;
  113  */
 #define CUTOFF_CONSTRAINT(x) SCIP_RETCODE x (SCIP* scip, SCIP_SOL* sol, SCIP_CONSHDLRDATA* conshdlrdata)
 
+std::vector<SCIP_Real> nodeVisited;
 
 
 
@@ -89,7 +90,7 @@ static SCIP_RETCODE getExpandedSolutionsValarray(
 		SCIP_SPARSESOL **sols, /**< sparse solutions to expands and write */
 		int nsols /**< number of sparse solutions */
 		//,std::vector<std::vector<float>> &solutionMap /**< Pointer to the return Solution Map */
-		, solutionStoreVector &generatedSolution, currentStateVariables &currentState)
+		, solutionStoreVector &generatedSolution)
 	{
 
 		//	std::cout << " Expanding Solutions " << nallvars << std::endl;
@@ -312,7 +313,8 @@ static SCIP_RETCODE getExpandedSolutionsValarray(
 
 				ResultstmpallVariables.clear();
 
-				ResultstmpallVariables = currentState.getMBestSolutionValues();
+//				ResultstmpallVariables = currentState.getMBestSolutionValues();
+				ResultstmpallVariables = curStateVariables.getMBestSolutionValues();
 				generatedSolution.updateSolution(ResultstmpallVariables);
 				//				solutionMap.push_back(tmpallVariables);
 
@@ -338,7 +340,7 @@ SCIP_RETCODE getAllExpandedSolutionsValarray(
 		SCIP_HASHMAP *hashmap, /**< hashmap from active solution variable to the position in the active variables array */
 		SCIP_SPARSESOL **sols, /**< sparse solutions to expands and write */
 		int nsols, /**< number of sparse solutions */
-		solutionStoreVector &generatedSolution, currentStateVariables &currentState)
+		solutionStoreVector &generatedSolution)
 	{
 
 		SCIP_SPARSESOL *sparsesol;
@@ -544,7 +546,7 @@ SCIP_RETCODE getAllExpandedSolutionsValarray(
 				ResultstmpallVariables.clear();
 
 				//				tmpallVariables = getBestObjectiveSolutionValarray();
-				ResultstmpallVariables = currentState.getMBestSolutionValues();
+				ResultstmpallVariables = curStateVariables.getMBestSolutionValues();
 				generatedSolution.updateSolution(ResultstmpallVariables);
 				//				solutionMap.push_back(tmpallVariables);
 				//				ResultsolutionMap.push_back(ResultstmpallVariables);
@@ -562,7 +564,7 @@ SCIP_RETCODE getAllExpandedSolutionsValarray(
 	}
 
 /** execution method of dialog for writing all solutions */
-SCIP_RETCODE branchCountScip::captureSolutions(SCIP *scip, solutionStoreVector &generatedSolution, currentStateVariables &currentState)
+SCIP_RETCODE branchCountScip::captureSolutions(SCIP *scip, solutionStoreVector &generatedSolution)
 	{
 
 		SCIP_Longint nsols;//Captures the total number of solutions
@@ -745,11 +747,15 @@ SCIP_RETCODE branchCountScip::captureSolutions(SCIP *scip, solutionStoreVector &
 							//							std::vector<std::vector<std::string>> resultsolMap;//Solution map for results; need to change this so I dont need this anymore
 
 							//TODO remove the below two lines:
-							std::cout << "\n This is nsols: " << nsols;
-							std::cout << "getCountedSolutions: " << currentState.getMCountedSolutionsSoFar() << std::endl;
+
+							printf("\n This is nsols: %d", nsols);
+							printf("getCountedSolutions: %d", curStateVariables.getMCountedSolutionsSoFar());
+
+//							std::cout << "\n This is nsols: " << nsols;
+//							std::cout << "getCountedSolutions: " << currentState.getMCountedSolutionsSoFar() << std::endl;
 
 							//			retcode = SM.expandSolutions(scip, allvars, conshdlrdata->nallvars, conshdlrdata->vars, nvars, conshdlrdata->hashmap, sparsesols, nsparsesols, solMap);
-							retcode = getAllExpandedSolutionsValarray(scip, allvars, conshdlrdata->nallvars, conshdlrdata->vars, nvars, conshdlrdata->hashmap, sparsesols, nsparsesols, generatedSolution, currentState);
+							retcode = getAllExpandedSolutionsValarray(scip, allvars, conshdlrdata->nallvars, conshdlrdata->vars, nvars, conshdlrdata->hashmap, sparsesols, nsparsesols, generatedSolution);
 
 							//							std::cout << " \n This is what is inside SolMap " << solMap[0].size();
 							std::cout << " \n This is what is inside allBinaryLocations " << allBinaryLocations.size();
@@ -848,7 +854,7 @@ SCIP_RETCODE branchCountScip::captureSolutions(SCIP *scip, solutionStoreVector &
 
 /**< Solves the problem loaded on SCIP and sets the bestObjective and bestSolution variables to be used by other methods */
 SCIP_RETCODE branchCountScip::phaseOne(SCIP *scip, /**< SCIP data structure */
-		const char *variableNameForScip, const char *filename, const char *fileFormat, solutionStoreVector &generatedSolution, currentStateVariables &currentState)
+		const char *variableNameForScip, const char *filename, const char *fileFormat, solutionStoreVector &generatedSolution)
 	{
 
 		assert(scip != NULL);
@@ -885,9 +891,10 @@ SCIP_RETCODE branchCountScip::phaseOne(SCIP *scip, /**< SCIP data structure */
 		//Get the best Solution and best Objective from PhaseOne
 		SCIP_Sol *bestSolution = (SCIPgetBestSol(scip));
 		//    float bestObjective = SCIPgetSolOrigObj(scip, bestSolution);
-		currentState.setMBestObjective(SCIPgetSolOrigObj(scip, bestSolution));
+//		currentState.setMBestObjective(SCIPgetSolOrigObj(scip, bestSolution));
+		curStateVariables.setMBestObjective(SCIPgetSolOrigObj(scip, bestSolution));
 
-		printf("\n *********************************  This is the Complete Objective: %f ********************************* \n", currentState.getMBestObjective());
+		printf("\n *********************************  This is the Complete Objective: %f ********************************* \n", curStateVariables.getMBestObjective());
 
 		std::vector<std::string> bestSolutionValues;
 		//    std::vector<float> bestSolutionValarray;
@@ -917,10 +924,10 @@ SCIP_RETCODE branchCountScip::phaseOne(SCIP *scip, /**< SCIP data structure */
 								//					std::pair<std::string, float>(valName, val));
 
 								bestSolutionValues.push_back(valName);
-								currentState.m_bestSolutionValues.push_back(valName);
+								curStateVariables.m_bestSolutionValues.push_back(valName);
 
 								bestSolutionValues.push_back(std::to_string(val));
-								currentState.m_bestSolutionValues.push_back(std::to_string(val));
+								curStateVariables.m_bestSolutionValues.push_back(std::to_string(val));
 							}
 						//						currentState.m_bestSolutionValues.push_back(valName);
 						//						currentState.m_bestSolutionValues.push_back(std::to_string(val));
@@ -945,16 +952,16 @@ SCIP_RETCODE branchCountScip::phaseOne(SCIP *scip, /**< SCIP data structure */
 
 /* Sets Parameters for the second phase of  the one-tree algorithm */
 SCIP_RETCODE branchCountScip::phaseTwo(SCIP *scip, /**< SCIP data structure */
-		const char *variableNameForScip, const char *filename, const char *fileFormat, solutionStoreVector &generatedSolution, currentStateVariables &currentState)
+		const char *variableNameForScip, const char *filename, const char *fileFormat, solutionStoreVector &generatedSolution)
 	{
 
 		assert(scip != NULL);
 
 		// INITIALIZE PLUGINS AND SET NECESSARY PARAMETERS
 
-		currentState.setMCountedSolutionsSoFar(0);
-		currentState.setMMaxTreeDepthSoFar(0);
-		currentState.solutionPool.clear();
+		curStateVariables.setMCountedSolutionsSoFar(0);
+		curStateVariables.setMMaxTreeDepthSoFar(0);
+		curStateVariables.solutionPool.clear();
 
 		//		utilities ut;
 		//		setCurrentState(currentState);
@@ -982,25 +989,25 @@ SCIP_RETCODE branchCountScip::phaseTwo(SCIP *scip, /**< SCIP data structure */
 		//TODO MAke this timelimit a  parameter
 		SCIP_CALL(SCIPsetRealParam(scip, "limits/time", 1800));//value is in seconds 1500
 
-		if (currentState.getMNodeType() == "DiversiTree")
+		if (curStateVariables.getMNodeType() == "DiversiTree")
 			{
-				printf("########################## SETTING NODE SELECTION RULE TO %s ################################# : \n", currentState.getMNodeType().c_str());
+				printf("########################## SETTING NODE SELECTION RULE TO %s ################################# : \n", curStateVariables.getMNodeType().c_str());
 				//				SCIP_CALL(SCIPincludeDiversitreeBfs(scip, currentState));
 				SCIP_CALL(SCIPincludeDiversitreeBfs(scip));
-				CS = currentState;
+//				CS = currentState;
 
 				SCIP_CALL(SCIPsetBoolParam(scip, "constraints/countsols/collect", TRUE));
 				//				SCIP_CALL(SCIPsetBoolParam(scip, "constraints/countsols/discardsols", FALSE));
 			}
 		else
 			{
-				printf("########################## SETTING NODE SELECTION RULE TO %s ################################# : \n", currentState.getMNodeType().c_str());
+				printf("########################## SETTING NODE SELECTION RULE TO %s ################################# : \n", curStateVariables.getMNodeType().c_str());
 
-				std::string stdMode = std::string("nodeselection/") + currentState.getMNodeType() + std::string("/stdpriority");
-				std::string prtMode = std::string("nodeselection/") + currentState.getMNodeType() + std::string("/memsavepriority");
-				std::string minPlungeDepth = std::string("nodeselection/") + currentState.getMNodeType() + std::string("/minplungedepth");
-				std::string maxPlungeDepth = std::string("nodeselection/") + currentState.getMNodeType() + std::string("/maxplungedepth");
-				std::string maxPlungeQuot = std::string("nodeselection/") + currentState.getMNodeType() + std::string("/maxplungequot");
+				std::string stdMode = std::string("nodeselection/") + curStateVariables.getMNodeType() + std::string("/stdpriority");
+				std::string prtMode = std::string("nodeselection/") + curStateVariables.getMNodeType() + std::string("/memsavepriority");
+				std::string minPlungeDepth = std::string("nodeselection/") + curStateVariables.getMNodeType() + std::string("/minplungedepth");
+				std::string maxPlungeDepth = std::string("nodeselection/") + curStateVariables.getMNodeType() + std::string("/maxplungedepth");
+				std::string maxPlungeQuot = std::string("nodeselection/") + curStateVariables.getMNodeType() + std::string("/maxplungequot");
 
 				SCIP_CALL(SCIPsetIntParam(scip, stdMode.c_str(), 200001));// For Standard Mode
 				SCIP_CALL(SCIPsetIntParam(scip, prtMode.c_str(), 100001));// For Priority Mode
@@ -1038,7 +1045,7 @@ SCIP_RETCODE branchCountScip::phaseTwo(SCIP *scip, /**< SCIP data structure */
 			}
 
 		// #############################################   SET THE OBJECTIVE BOUND BASED ON Q% #############################################################
-		float ObjBound = currentState.getMBestObjective() + (currentState.getMBestObjective() * currentState.percentNearOptimal());
+		float ObjBound = curStateVariables.getMBestObjective() + (curStateVariables.getMBestObjective() * curStateVariables.percentNearOptimal());
 		SCIPsetObjlimit(scip, ObjBound);
 
 		//		printf("This is objlimit %f: \n", ObjBound);
@@ -1049,23 +1056,23 @@ SCIP_RETCODE branchCountScip::phaseTwo(SCIP *scip, /**< SCIP data structure */
 
 		// #############################################   PERFORM PARAMETER CHECKS  #############################################################
 		// Determine the number of solutions required
-		if (currentState.requestedNumberOfSolutions() > 0 || currentState.requestedNumberOfSolutions() == -1)
+		if (curStateVariables.requestedNumberOfSolutions() > 0 || curStateVariables.requestedNumberOfSolutions() == -1)
 			{
 
 				std::string tmpStr = "";
 
-				if (currentState.requestedNumberOfSolutions() > 0)
+				if (curStateVariables.requestedNumberOfSolutions() > 0)
 					{
-						tmpStr = std::to_string(currentState.requestedNumberOfSolutions());
+						tmpStr = std::to_string(curStateVariables.requestedNumberOfSolutions());
 					}
 				else
 					{
 						tmpStr = "Unlimited (time bounded)";
 					}
 
-				printf("Counting %s solutions within %f % of the optimal \n", tmpStr.c_str(), currentState.percentNearOptimal() * 100);
+				printf("Counting %s solutions within %f % of the optimal \n", tmpStr.c_str(), curStateVariables.percentNearOptimal() * 100);
 				//				std::cout << " Counting " << tmpStr << " solutions within " << qpercent * 100 << "% Of the optimal " << std::endl;
-				SCIP_CALL(SCIPsetLongintParam(scip, "constraints/countsols/sollimit", currentState.requestedNumberOfSolutions()));
+				SCIP_CALL(SCIPsetLongintParam(scip, "constraints/countsols/sollimit", curStateVariables.requestedNumberOfSolutions()));
 
 			}
 		else
@@ -1080,9 +1087,9 @@ SCIP_RETCODE branchCountScip::phaseTwo(SCIP *scip, /**< SCIP data structure */
 		// #############################################   ######################  ######################################################################
 
 		//    // I need to time this run and add the start time and end time to the current state values.
-		currentState.setStartTime(std::chrono::high_resolution_clock::now());
+		curStateVariables.setStartTime(std::chrono::high_resolution_clock::now());
 		retcode = SCIPcount(scip);// Required if you want to count solutions
-		currentState.setStopTime(std::chrono::high_resolution_clock::now());
+		curStateVariables.setStopTime(std::chrono::high_resolution_clock::now());
 		nsols = SCIPgetNCountedSols(scip, &valid);// Required if you want to count solutions
 
 		if (retcode != SCIP_OKAY)
@@ -1105,7 +1112,7 @@ SCIP_RETCODE branchCountScip::phaseTwo(SCIP *scip, /**< SCIP data structure */
 		// ############################################# START THE NEAR OPTIMAL SOLUTIONS GENERATION PROCESS ###########################################################
 		//	std::cout << SCIP_capture_Solutions(scip, qpercent);
 		//	getAllDiversity(scip);
-		captureSolutions(scip, generatedSolution, currentState);
+		captureSolutions(scip, generatedSolution);
 
 		// #####################  END: THESE CODES ARE REQUIRED IF YOU WANT TO COUNT THE NUMBER OF SOLUTIONS
 
@@ -1113,7 +1120,7 @@ SCIP_RETCODE branchCountScip::phaseTwo(SCIP *scip, /**< SCIP data structure */
 
 	}
 
-SCIP_RETCODE branchCountScip::runSCIP(solutionStoreVector &generatedSolution, currentStateVariables &currentState)
+SCIP_RETCODE branchCountScip::runSCIP(solutionStoreVector &generatedSolution)
 	{
 		SCIP *scip = NULL;
 		//		if (currentState.getMObjectiveCalculated() == 0)
@@ -1121,7 +1128,7 @@ SCIP_RETCODE branchCountScip::runSCIP(solutionStoreVector &generatedSolution, cu
 
 		SCIP_CALL(SCIPcreate(&scip));
 		//TODO We need to get the file extension from the file name
-		std::string fName = branchCountScip::m_allOptions.m_scipMPSFileDirectory + "/" + currentState.m_optimizationProblems + ".mps";
+		std::string fName = branchCountScip::m_allOptions.m_scipMPSFileDirectory + "/" + curStateVariables.m_optimizationProblems + ".mps";
 
 		//		if (currentState.getMObjectiveCalculated() == 1){
 		//
@@ -1137,15 +1144,15 @@ SCIP_RETCODE branchCountScip::runSCIP(solutionStoreVector &generatedSolution, cu
 		printf("\n Calculating PhaseOne: Objective Function:  \n");
 
 
-		SCIP_CALL(branchCountScip::phaseOne(scip, "countPhaseOne", fName.c_str(), "mps", generatedSolution, currentState));
-		currentState.setMObjectiveCalculated(1);
+		SCIP_CALL(branchCountScip::phaseOne(scip, "countPhaseOne", fName.c_str(), "mps", generatedSolution));
+		curStateVariables.setMObjectiveCalculated(1);
 
 		//		}
 
 		scip = NULL;
 		SCIP_CALL(SCIPcreate(&scip));
 
-		SCIP_CALL(branchCountScip::phaseTwo(scip, "countPhaseTwo", fName.c_str(), "mps", generatedSolution, currentState));
+		SCIP_CALL(branchCountScip::phaseTwo(scip, "countPhaseTwo", fName.c_str(), "mps", generatedSolution));
 		//				SCIP_CALL(SCIP_DECL_CONSFREE(scip,consFreeCountsols));
 
 		//			}
@@ -1177,10 +1184,16 @@ branchCountScip::branchCountScip(optionsReader &allOptions) : solutionsGenerator
 
 	}
 
-void branchCountScip::generateSolutionsFromMIP(solutionStoreVector &generatedSolution, currentStateVariables &currentState)
+SCIP_RETCODE branchCountScip::generateSolutionsFromMIP(solutionStoreVector &generatedSolution, currentStateVariables &currentState)
 	{
 		//std::cout<< "I got this far" ;
-		SCIP_RETCODE retcode = branchCountScip::runSCIP(generatedSolution, currentState);
+//		setCurrentState(currentState);
+
+		SCIP_RETCODE retcode = branchCountScip::runSCIP(generatedSolution);
+
+//		currentState = getCurrentState();
+
+		return retcode;
 	}
 
 /** execution method of dialog for writing all solutions */
@@ -1196,8 +1209,7 @@ float branchCountScip::getNodeDiversityValarray(
 		int node1Key,
 		int node2Key,
 		std::vector<bool> &node1ValarraySelector,
-		std::vector<bool> &node2ValarraySelector,
-		currentStateVariables &cst)
+		std::vector<bool> &node2ValarraySelector)
 	{
 
 		SCIP_Longint nsols;//Captures the total number of solutions
@@ -1207,7 +1219,7 @@ float branchCountScip::getNodeDiversityValarray(
 		float finalDiversityScoreNode2 { };
 		//		utilities ut;
 
-		solutionStoreVector solMap = cst.getSolutionPool();
+		solutionStoreVector solMap = curStateVariables.getSolutionPool();
 
 		//		printf(" \n This is the solMap length: %d \n", solMap.m_solutionsVector.size() );
 
@@ -1368,7 +1380,7 @@ float branchCountScip::getNodeDiversityValarray(
 								//								currentStateVariables cst  = utilities::getCurrentState();
 								//								currentStateVariables cst = getCurrentState();
 
-								retcode = getAllExpandedSolutionsValarray(scip, allvars, conshdlrdata->nallvars, conshdlrdata->vars, nvars, conshdlrdata->hashmap, sparsesols, nsparsesols, solMap, cst);
+								retcode = getAllExpandedSolutionsValarray(scip, allvars, conshdlrdata->nallvars, conshdlrdata->vars, nvars, conshdlrdata->hashmap, sparsesols, nsparsesols, solMap);
 								//								retcode = getExpandedSolutionsValarray(scip, allvars, conshdlrdata->nallvars, conshdlrdata->vars, nvars, conshdlrdata->hashmap, sparsesols, nsparsesols, solMap);
 
 								if (retcode != SCIP_OKAY)
@@ -1380,7 +1392,7 @@ float branchCountScip::getNodeDiversityValarray(
 								// set new Solutions  pool
 
 								//								utilities::getCurrentState().setSolutionPool(solMap);
-								cst.setSolutionPool(solMap);
+								curStateVariables.setSolutionPool(solMap);
 
 								if ( (node1BranchMap.size() > 0) and (computeNode1 == true) )
 									{
