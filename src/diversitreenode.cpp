@@ -93,7 +93,7 @@ SCIP_RETCODE expandMemorySize(
 		assert(nodeseldata != NULL);
 
 		/* if array has not been allocated yet, do this now with default initial capacity */
-		if( nodeVisited.size() <= 0 )
+		if( nodeVisited.size() <= 0 or nodeseldata->sizenodevisit <= 0)
 			{
 				printf("I am Initializing, resizing node visits array, old capacity: %d new capacity : %d\n", nodeVisited.size(), INITIALSIZE);
 				//				SCIP_CALL( SCIPallocClearMemoryArray(scip, &nodeseldata->nodevisit, INITIALSIZE) ); /*lint !e506*/
@@ -209,7 +209,7 @@ void updateVisit(SCIP*                 scip,               /**< SCIP data struct
 		}
 		else{
 
-				expandMemorySize(scip, nodeseldata);
+//				expandMemorySize(scip, nodeseldata);
 
 		}
 
@@ -242,6 +242,7 @@ void updateVisit(SCIP*                 scip,               /**< SCIP data struct
 static
 SCIP_DECL_NODESELCOPY(nodeselCopyDiversitreenode)
   															 {  /*lint --e{715}*/
+		printf("Copying \n");
 		assert(scip != NULL);
 		SCIP_CALL(SCIPincludeDiversitreeBfs(scip, CS));
 
@@ -252,6 +253,8 @@ SCIP_DECL_NODESELCOPY(nodeselCopyDiversitreenode)
 static
 SCIP_DECL_NODESELINITSOL(nodeselInitsolDiversitreenode)
   															 {
+
+		printf("Initializing \n");
 		SCIP_NODESELDATA* nodeseldata;
 		assert(scip != NULL);
 		assert(nodesel != NULL);
@@ -271,6 +274,7 @@ SCIP_DECL_NODESELINITSOL(nodeselInitsolDiversitreenode)
 static
 SCIP_DECL_NODESELEXITSOL(nodeselExitsolDiversitreenode)
   															 {
+		printf("Exiting \n");
 		SCIP_NODESELDATA* nodeseldata;
 		assert(scip != NULL);
 		assert(nodesel != NULL);
@@ -298,6 +302,8 @@ SCIP_DECL_NODESELEXITSOL(nodeselExitsolDiversitreenode)
 static
 SCIP_DECL_NODESELFREE(nodeselFreeDiversitreenode)
   															 {
+
+		printf("Freeing \n");
 		SCIP_NODESELDATA* nodeseldata;
 		assert(scip != NULL);
 		assert(nodesel != NULL);
@@ -1023,6 +1029,7 @@ SCIP_RETCODE SCIPincludeDiversitreeBfs(
 		currentStateVariables &currentState
 )
 	{
+		printf("Including \n");
 		SCIP_NODESELDATA* nodeseldata;
 		SCIP_NODESEL* nodesel;
 

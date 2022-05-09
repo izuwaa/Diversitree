@@ -1115,14 +1115,26 @@ SCIP_RETCODE branchCountScip::runSCIP(solutionStoreVector &generatedSolution, cu
 
 		SCIP_CALL(SCIPcreate(&scip));
 		//TODO We need to get the file extension from the file name
-
-		printf("\n This is the name of the scipMPSFileDirectory: %s  \n", branchCountScip::m_allOptions.m_scipMPSFileDirectory.c_str());
-
-		printf("\n Calculating PhaseOne: Objective Function:  \n");
-
 		std::string fName = branchCountScip::m_allOptions.m_scipMPSFileDirectory + "/" + currentState.m_optimizationProblems + ".mps";
-		SCIP_CALL(branchCountScip::phaseOne(scip, "countPhaseOne", fName.c_str(), "mps", generatedSolution, currentState));
-		currentState.setMObjectiveCalculated(1);
+
+		if (currentState.getMObjectiveCalculated() == 1){
+
+				printf("\n Already calculated best objective for this problem  \n");
+				printf("\n *********************************  This is the Complete Objective: %f ********************************* \n", currentState.getMBestObjective());
+
+
+		}
+		else{
+
+
+				printf("\n This is the name of the scipMPSFileDirectory: %s  \n", branchCountScip::m_allOptions.m_scipMPSFileDirectory.c_str());
+				printf("\n Calculating PhaseOne: Objective Function:  \n");
+
+
+				SCIP_CALL(branchCountScip::phaseOne(scip, "countPhaseOne", fName.c_str(), "mps", generatedSolution, currentState));
+				currentState.setMObjectiveCalculated(1);
+
+		}
 
 		scip = NULL;
 		SCIP_CALL(SCIPcreate(&scip));
@@ -1191,13 +1203,13 @@ float branchCountScip::getNodeDiversityValarray(
 
 		solutionStoreVector solMap = cst.getSolutionPool();
 
-//		printf(" \n This is the solMap length: %d \n", solMap.m_solutionsVector.size() );
+		//		printf(" \n This is the solMap length: %d \n", solMap.m_solutionsVector.size() );
 
 		std::vector<bool> allBinaryLocations { };
 		int numB = 0;// This is the total number of Binary Variables - Meant to check
 
 		assert(scip != NULL);
-//		assert(cst != NULL);
+		//		assert(cst != NULL);
 
 		SCIP_STAGE stage = SCIPgetStage(scip);
 
@@ -1411,14 +1423,14 @@ float branchCountScip::getNodeDiversityValarray(
 								//								currentStateVariables cst = utilities::getCurrentState();
 								//								currentStateVariables cst = getCurrentState();
 								//								solutionStoreVector solMap = cst->getSolutionPool();
-//								solMap = cst->getSolutionPool();
+								//								solMap = cst->getSolutionPool();
 								// set new Solutions  pool
 
 								//
 								//
 								//TODO Make a node diversity map so that we dont have to compute diversity everytime solutions are updated
 
-//								printf("Soln Didn't Change side : \n ");
+								//								printf("Soln Didn't Change side : \n ");
 
 								if ( (node1BranchMap.size() > 0) and (computeNode1 == true) )
 									{
