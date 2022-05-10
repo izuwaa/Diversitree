@@ -313,7 +313,7 @@ static SCIP_RETCODE getExpandedSolutionsValarray(
 
 				ResultstmpallVariables.clear();
 
-//				ResultstmpallVariables = currentState.getMBestSolutionValues();
+				//				ResultstmpallVariables = currentState.getMBestSolutionValues();
 				ResultstmpallVariables = curStateVariables.getMBestSolutionValues();
 				generatedSolution.updateSolution(ResultstmpallVariables);
 				//				solutionMap.push_back(tmpallVariables);
@@ -751,8 +751,8 @@ SCIP_RETCODE branchCountScip::captureSolutions(SCIP *scip, solutionStoreVector &
 							printf("\n This is nsols: %d", nsols);
 							printf("getCountedSolutions: %d", curStateVariables.getMCountedSolutionsSoFar());
 
-//							std::cout << "\n This is nsols: " << nsols;
-//							std::cout << "getCountedSolutions: " << currentState.getMCountedSolutionsSoFar() << std::endl;
+							//							std::cout << "\n This is nsols: " << nsols;
+							//							std::cout << "getCountedSolutions: " << currentState.getMCountedSolutionsSoFar() << std::endl;
 
 							//			retcode = SM.expandSolutions(scip, allvars, conshdlrdata->nallvars, conshdlrdata->vars, nvars, conshdlrdata->hashmap, sparsesols, nsparsesols, solMap);
 							retcode = getAllExpandedSolutionsValarray(scip, allvars, conshdlrdata->nallvars, conshdlrdata->vars, nvars, conshdlrdata->hashmap, sparsesols, nsparsesols, generatedSolution);
@@ -891,7 +891,7 @@ SCIP_RETCODE branchCountScip::phaseOne(SCIP *scip, /**< SCIP data structure */
 		//Get the best Solution and best Objective from PhaseOne
 		SCIP_Sol *bestSolution = (SCIPgetBestSol(scip));
 		//    float bestObjective = SCIPgetSolOrigObj(scip, bestSolution);
-//		currentState.setMBestObjective(SCIPgetSolOrigObj(scip, bestSolution));
+		//		currentState.setMBestObjective(SCIPgetSolOrigObj(scip, bestSolution));
 		curStateVariables.setMBestObjective(SCIPgetSolOrigObj(scip, bestSolution));
 
 		printf("\n *********************************  This is the Complete Objective: %f ********************************* \n", curStateVariables.getMBestObjective());
@@ -994,7 +994,7 @@ SCIP_RETCODE branchCountScip::phaseTwo(SCIP *scip, /**< SCIP data structure */
 				printf("########################## SETTING NODE SELECTION RULE TO %s ################################# : \n", curStateVariables.getMNodeType().c_str());
 				//				SCIP_CALL(SCIPincludeDiversitreeBfs(scip, currentState));
 				SCIP_CALL(SCIPincludeDiversitreeBfs(scip));
-//				CS = currentState;
+				//				CS = currentState;
 
 				SCIP_CALL(SCIPsetBoolParam(scip, "constraints/countsols/collect", TRUE));
 				//				SCIP_CALL(SCIPsetBoolParam(scip, "constraints/countsols/discardsols", FALSE));
@@ -1130,24 +1130,24 @@ SCIP_RETCODE branchCountScip::runSCIP(solutionStoreVector &generatedSolution)
 		//TODO We need to get the file extension from the file name
 		std::string fName = branchCountScip::m_allOptions.m_scipMPSFileDirectory + "/" + curStateVariables.m_optimizationProblems + ".mps";
 
-		//		if (currentState.getMObjectiveCalculated() == 1){
-		//
-		//				printf("\n Already calculated best objective for this problem  \n");
-		//				printf("\n *********************************  This is the Complete Objective: %f ********************************* \n", currentState.getMBestObjective());
-		//
-		//
-		//		}
-		//		else{
+		if (curStateVariables.getMObjectiveCalculated() == 1){
+
+				printf("\n Already calculated best objective for this problem  \n");
+				printf("\n *********************************  This is the Complete Objective: %f ********************************* \n", curStateVariables.getMBestObjective());
 
 
-		printf("\n This is the name of the scipMPSFileDirectory: %s  \n", branchCountScip::m_allOptions.m_scipMPSFileDirectory.c_str());
-		printf("\n Calculating PhaseOne: Objective Function:  \n");
+		}
+		else{
 
 
-		SCIP_CALL(branchCountScip::phaseOne(scip, "countPhaseOne", fName.c_str(), "mps", generatedSolution));
-		curStateVariables.setMObjectiveCalculated(1);
+				printf("\n This is the name of the scipMPSFileDirectory: %s  \n", branchCountScip::m_allOptions.m_scipMPSFileDirectory.c_str());
+				printf("\n Calculating PhaseOne: Objective Function:  \n");
 
-		//		}
+
+				SCIP_CALL(branchCountScip::phaseOne(scip, "countPhaseOne", fName.c_str(), "mps", generatedSolution));
+				curStateVariables.setMObjectiveCalculated(1);
+
+		}
 
 		scip = NULL;
 		SCIP_CALL(SCIPcreate(&scip));
@@ -1187,11 +1187,11 @@ branchCountScip::branchCountScip(optionsReader &allOptions) : solutionsGenerator
 SCIP_RETCODE branchCountScip::generateSolutionsFromMIP(solutionStoreVector &generatedSolution, currentStateVariables &currentState)
 	{
 		//std::cout<< "I got this far" ;
-//		setCurrentState(currentState);
+		//		setCurrentState(currentState);
 
 		SCIP_RETCODE retcode = branchCountScip::runSCIP(generatedSolution);
 
-//		currentState = getCurrentState();
+		//		currentState = getCurrentState();
 
 		return retcode;
 	}
