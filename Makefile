@@ -145,15 +145,15 @@ tags:
 
 $(MAINFILE):	$(BINDIR) $(OBJDIR) $(SCIPLIBFILE) $(LPILIBFILE) $(NLPILIBFILE) $(MAINOBJFILES)
 		@echo "-> linking $@"
-		$(LINKCXX) $(MAINOBJFILES) $(LINKCXXSCIPALL) $(LDFLAGS) -fsanitize=address -O1 -fno-omit-frame-pointer $(LINKCXX_o)$@
+		$(LINKCXX) -ggdb3 -fsanitize=address $(MAINOBJFILES) $(LINKCXXSCIPALL) $(LDFLAGS) $(LINKCXX_o)$@
 
 $(OBJDIR)/%.o:	$(SRCDIR)/%.c
 		@echo "-> compiling $@"
-		$(CC) $(FLAGS) $(OFLAGS) $(BINOFLAGS) $(CFLAGS) $(DFLAGS) -fsanitize=address -O1 -fno-omit-frame-pointer -g -c $< $(CC_o)$@
+		$(CC) -fsanitize=address -O1 -fno-omit-frame-pointer -ggdb3 $(FLAGS) $(OFLAGS) $(BINOFLAGS) $(CFLAGS) $(DFLAGS) -c $< $(CC_o)$@
 
 $(OBJDIR)/%.o:	$(SRCDIR)/%.cpp
 		@echo "-> compiling $@"
-		$(CXX) $(FLAGS) $(OFLAGS) $(BINOFLAGS) $(CXXFLAGS) $(DFLAGS) -fsanitize=address -O1 -fno-omit-frame-pointer -g -c $< $(CXX_o)$@
+		$(CXX) -fsanitize=address -O1 -fno-omit-frame-pointer -ggdb3 $(FLAGS) $(OFLAGS) $(BINOFLAGS) $(CXXFLAGS) $(DFLAGS) -c $< $(CXX_o)$@
 		
 		
 		
