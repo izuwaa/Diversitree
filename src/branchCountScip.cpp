@@ -1096,6 +1096,7 @@ SCIP_RETCODE branchCountScip::phaseTwo(SCIP *scip, /**< SCIP data structure */
 		curStateVariables.setStopTime(std::chrono::high_resolution_clock::now());
 		printf("Time Ended \n");
 		nsols = SCIPgetNCountedSols(scip, &valid);// Required if you want to count solutions
+		printf("Trying to capture nsols here \n");
 
 		if (retcode != SCIP_OKAY)
 			{
