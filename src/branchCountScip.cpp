@@ -639,7 +639,7 @@ SCIP_RETCODE branchCountScip::captureSolutions(SCIP *scip, solutionStoreVector &
 					else if (nsols == 0)
 						{
 //							SCIPdialogMessage(scip, NULL, "there are no counted solutions\n");
-							printf("There are no counted solutions \n");
+							printf("There are no counted solutions - Changed \n");
 						}
 					else if (nsparsesols == 0)
 						{
