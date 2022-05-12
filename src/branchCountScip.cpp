@@ -1096,10 +1096,11 @@ SCIP_RETCODE branchCountScip::phaseTwo(SCIP *scip, /**< SCIP data structure */
 		curStateVariables.setStopTime(std::chrono::high_resolution_clock::now());
 		printf("Time Ended \n");
 		nsols = SCIPgetNCountedSols(scip, &valid);// Required if you want to count solutions
-		printf("Trying to capture nsols here \n");
+		printf("Tried to capture nsols here \n");
 
 		if (retcode != SCIP_OKAY)
 			{
+				printf("\n Count Failed");
 				SCIPinfoMessage(scip, NULL, "\n Count Failed");
 			}
 		else
@@ -1120,6 +1121,7 @@ SCIP_RETCODE branchCountScip::phaseTwo(SCIP *scip, /**< SCIP data structure */
 		//	getAllDiversity(scip);
 		printf("Starting Capture \n");
 		captureSolutions(scip, generatedSolution);
+		printf("Ended Capture Solutions \n");
 
 		// #####################  END: THESE CODES ARE REQUIRED IF YOU WANT TO COUNT THE NUMBER OF SOLUTIONS
 
