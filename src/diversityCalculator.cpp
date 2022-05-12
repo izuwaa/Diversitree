@@ -13,65 +13,74 @@ diversityCalculator::diversityCalculator(solutionStoreVector solutions)
 	{
 		utilities ut;
 
-		try
-		{
-				std::stof(solutions.m_solutionsVector[0][0]);// if the first element in the inner vector is a float, then call utilities using "false" for vectorHasHeaders
-				diversityCalculator::m_solutionMap = ut.stringSolutionsToFloat(solutions.m_solutionsVector, false);
-		} catch (...)
-			{
-				diversityCalculator::m_solutionMap = ut.stringSolutionsToFloat(solutions.m_solutionsVector, true);
-			}
+//		printf("This is solutions Size: %d \n \n", solutions.m_solutionsVector.size());
 
-		diversityCalculator::m_binaryLocations = solutions.m_binaryLocationsVector;
-		//    diversityCalculator::m_diversityScore = 0;
+		if (solutions.m_solutionsVector.size() > 0){
+				try
+				{
+						std::stof(solutions.m_solutionsVector[0][0]);// if the first element in the inner vector is a float, then call utilities using "false" for vectorHasHeaders
+						diversityCalculator::m_solutionMap = ut.stringSolutionsToFloat(solutions.m_solutionsVector, false);
+				} catch (...)
+					{
+						diversityCalculator::m_solutionMap = ut.stringSolutionsToFloat(solutions.m_solutionsVector, true);
+					}
+
+				diversityCalculator::m_binaryLocations = solutions.m_binaryLocationsVector;
+				//    diversityCalculator::m_diversityScore = 0;
+		}
 	}
 
 float diversityCalculator::dbinQuick(std::vector<std::vector<float>> solutionVector)
 	{
 
-		std::vector<float> results(solutionVector.size(), 0);
-		float hammingDistance = 0;
-		float dbinScore = 0;
+		if (solutionVector.size() > 0) {
+				std::vector<float> results(solutionVector.size(), 0);
+				float hammingDistance = 0;
+				float dbinScore = 0;
 
-		//    float a = 0;
-		//    float b = 0;
+				//    float a = 0;
+				//    float b = 0;
 
-		//    std::cout << "................. Computing diversity scores for " << solutionVector.size() << " solutions ......... \n \n";
+				//    std::cout << "................. Computing diversity scores for " << solutionVector.size() << " solutions ......... \n \n";
 
-		for (int x = 0; x < static_cast<int>(solutionVector.size()); x++)
-			{
-				//        std::cout << ".";
-				std::vector<float> firstSolutionVector = solutionVector[x];
-				std::valarray<float> firstSolutionValarry(firstSolutionVector.data(), firstSolutionVector.size());
-
-				for (int t = x + 1; t < static_cast<int>(solutionVector.size()); t++)
+				for (int x = 0; x < static_cast<int>(solutionVector.size()); x++)
 					{
-						//            hammingDistance = 0;
+						//        std::cout << ".";
+						std::vector<float> firstSolutionVector = solutionVector[x];
+						std::valarray<float> firstSolutionValarry(firstSolutionVector.data(), firstSolutionVector.size());
 
-						std::vector<float> secondSolutionVector = solutionVector[t];
-						std::valarray<float> secondSolutionValarry(secondSolutionVector.data(), secondSolutionVector.size());
+						for (int t = x + 1; t < static_cast<int>(solutionVector.size()); t++)
+							{
+								//            hammingDistance = 0;
 
-						std::valarray<float> tmpResult = std::abs(secondSolutionValarry - firstSolutionValarry);
+								std::vector<float> secondSolutionVector = solutionVector[t];
+								std::valarray<float> secondSolutionValarry(secondSolutionVector.data(), secondSolutionVector.size());
 
-						hammingDistance = tmpResult.sum() / (float) firstSolutionValarry.size();
-						dbinScore += hammingDistance;
+								std::valarray<float> tmpResult = std::abs(secondSolutionValarry - firstSolutionValarry);
 
+								hammingDistance = tmpResult.sum() / (float) firstSolutionValarry.size();
+								dbinScore += hammingDistance;
+
+							}
 					}
-			}
 
-		//    std::cout << "\n ......... Completed computing diversity scores for " << solutionVector.size() << " all solutions .......... " << std::endl;
-		float tp = static_cast<float>(solutionVector.size());
+				//    std::cout << "\n ......... Completed computing diversity scores for " << solutionVector.size() << " all solutions .......... " << std::endl;
+				float tp = static_cast<float>(solutionVector.size());
 
-		float m_diversityScore = (2 / (tp * (tp - 1))) * dbinScore;
+				float m_diversityScore = (2 / (tp * (tp - 1))) * dbinScore;
 
-		if (std::isnan(m_diversityScore))
-			{
-				m_diversityScore = 0;
-			}
+				if (std::isnan(m_diversityScore))
+					{
+						m_diversityScore = 0;
+					}
 
-		//    std::cout << "This is the final diversity score: " << m_diversityScore << "\n";
+				//    std::cout << "This is the final diversity score: " << m_diversityScore << "\n";
 
-		return m_diversityScore;
+				return m_diversityScore;
+		}
+		else{
+				return 0;
+		}
 
 	}
 
@@ -189,7 +198,7 @@ float diversityCalculator::dbinNode(std::vector<float> solutionVector)
 				std::valarray<bool> binaryValuesColumnSelector(b2, diversityCalculator::m_binaryLocations.size());
 
 				std::valarray<float> firstSolutionValarry(solutionVector.data(), solutionVector.size());
-//				std::valarray<float> binaryValuesFirstSolutionValarry = firstSolutionValarry[binaryValuesColumnSelector];
+				//				std::valarray<float> binaryValuesFirstSolutionValarry = firstSolutionValarry[binaryValuesColumnSelector];
 				std::valarray<float> binaryValuesFirstSolutionValarry(solutionVector.data(), solutionVector.size());
 
 				for (int x = 0; x < static_cast<int>(diversityCalculator::m_solutionMap.size()); x++)
@@ -227,53 +236,60 @@ float diversityCalculator::dbinNode(std::vector<float> solutionVector)
 int diversityCalculator::dbinAll(currentStateVariables &curState)
 	{
 
-		std::vector<float> results(diversityCalculator::m_solutionMap.size(), 0);
-		curState.setNumberSolutionsGenerated(diversityCalculator::m_solutionMap.size());
-		float hammingDistance = 0;
-		float dbinScore = 0;
-		float numBin = 0;
+		if ( diversityCalculator::m_solutionMap.size() >0 ){
 
-		bool b2[diversityCalculator::m_binaryLocations.size()];
-		std::copy(diversityCalculator::m_binaryLocations.begin(), diversityCalculator::m_binaryLocations.end(), b2);
 
-		std::valarray<bool> binaryValuesColumnSelector(b2, diversityCalculator::m_binaryLocations.size());
+				std::vector<float> results(diversityCalculator::m_solutionMap.size(), 0);
+				curState.setNumberSolutionsGenerated(diversityCalculator::m_solutionMap.size());
+				float hammingDistance = 0;
+				float dbinScore = 0;
+				float numBin = 0;
 
-		for (int x = 0; x < static_cast<int>(diversityCalculator::m_solutionMap.size()); x++)
-			{
+				bool b2[diversityCalculator::m_binaryLocations.size()];
+				std::copy(diversityCalculator::m_binaryLocations.begin(), diversityCalculator::m_binaryLocations.end(), b2);
 
-				std::vector<float> firstSolutionVector = diversityCalculator::m_solutionMap[x];
-				std::valarray<float> firstSolutionValarry(firstSolutionVector.data(), firstSolutionVector.size());
-				std::valarray<float> binaryValuesFirstSolutionValarry = firstSolutionValarry[binaryValuesColumnSelector];
+				std::valarray<bool> binaryValuesColumnSelector(b2, diversityCalculator::m_binaryLocations.size());
 
-				for (int t = x + 1; t < static_cast<int>(diversityCalculator::m_solutionMap.size()); t++)
+				for (int x = 0; x < static_cast<int>(diversityCalculator::m_solutionMap.size()); x++)
 					{
-						//            hammingDistance = 0;
 
-						std::vector<float> secondSolutionVector = diversityCalculator::m_solutionMap[t];
-						std::valarray<float> secondSolutionValarry(secondSolutionVector.data(), secondSolutionVector.size());
-						std::valarray<float> binaryValuesSecondSolutionValarry = secondSolutionValarry[binaryValuesColumnSelector];
+						std::vector<float> firstSolutionVector = diversityCalculator::m_solutionMap[x];
+						std::valarray<float> firstSolutionValarry(firstSolutionVector.data(), firstSolutionVector.size());
+						std::valarray<float> binaryValuesFirstSolutionValarry = firstSolutionValarry[binaryValuesColumnSelector];
 
-						std::valarray<float> tmpResult = std::abs(binaryValuesSecondSolutionValarry - binaryValuesFirstSolutionValarry);
+						for (int t = x + 1; t < static_cast<int>(diversityCalculator::m_solutionMap.size()); t++)
+							{
+								//            hammingDistance = 0;
 
-						hammingDistance = tmpResult.sum() / (float) binaryValuesFirstSolutionValarry.size();
-						dbinScore += hammingDistance;
+								std::vector<float> secondSolutionVector = diversityCalculator::m_solutionMap[t];
+								std::valarray<float> secondSolutionValarry(secondSolutionVector.data(), secondSolutionVector.size());
+								std::valarray<float> binaryValuesSecondSolutionValarry = secondSolutionValarry[binaryValuesColumnSelector];
 
+								std::valarray<float> tmpResult = std::abs(binaryValuesSecondSolutionValarry - binaryValuesFirstSolutionValarry);
+
+								hammingDistance = tmpResult.sum() / (float) binaryValuesFirstSolutionValarry.size();
+								dbinScore += hammingDistance;
+
+							}
 					}
-			}
 
-		//    std::cout << "\n ......... Completed computing diversity scores for all solutions .......... \n";
-		float tp = static_cast<float>(diversityCalculator::m_solutionMap.size());
+				//    std::cout << "\n ......... Completed computing diversity scores for all solutions .......... \n";
+				float tp = static_cast<float>(diversityCalculator::m_solutionMap.size());
 
-		float m_diversityScore = (2 / (tp * (tp - 1))) * dbinScore;
+				float m_diversityScore = (2 / (tp * (tp - 1))) * dbinScore;
 
-		if (std::isnan(m_diversityScore))
-			{
+				if (std::isnan(m_diversityScore))
+					{
+						curState.setDiversity(0);
+					}
+				else
+					{
+						curState.setDiversity(m_diversityScore);
+					}
+		}
+		else{
 				curState.setDiversity(0);
-			}
-		else
-			{
-				curState.setDiversity(m_diversityScore);
-			}
+		}
 
 		//    std::cout << "This is the final diversity score: " << curState.getDiversity() << std::endl;
 		//    std::cout << "This is the final diversity score: " << m_diversityScore << std::endl;
@@ -287,6 +303,8 @@ int diversityCalculator::dbinP(currentStateVariables &curState)
 		//    std::vector<float> results(diversityCalculator::m_solutionMap.size(), 0);
 		//    std::cout << "................. Computing diversity scores for " << " ......... \n \n";
 		printf("................. Computing diversity scores for  ......... \n \n");
+
+		if ( diversityCalculator::m_solutionMap.size() >0 ){
 		std::vector<std::vector<float>> results { };
 		float diversityScore { };
 		curState.setNumberSolutionsGenerated(diversityCalculator::m_solutionMap.size());
@@ -351,7 +369,10 @@ int diversityCalculator::dbinP(currentStateVariables &curState)
 
 		curState.setDiversity(diversityScore);
 		// .....................................................................................................
-
+		}
+		else{
+				curState.setDiversity(0);
+		}
 		return 0;
 	}
 
