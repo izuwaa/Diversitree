@@ -401,51 +401,68 @@ int main(int argc, char **argv)
 																												std::chrono::duration<double, std::milli> timeSpent = curStateVariables.getStopTime() - curStateVariables.getStartTime();
 																												curStateVariables.setTimeSpent(timeSpent.count());
 
+																												printf("About Starting Diversity calculator \n");
 																												diversityCalculator divCalc(generatedSolutions);
+																												printf("Ended Diversity calculator \n");
+																												printf("About Starting Diversity calculation \n");
 																												divCalc.dbinAll(curStateVariables);
-
+																												printf("Ended Diversity calculation \n");
 																												solutionStoreMap solutionsMap;
+
+																												printf("About starting the assignments \n");
+																												printf(" 1");
 																												std::string recordName = curStateVariables.optimizationProblems() + "(" + std::to_string(curStateVariables.requestedNumberOfSolutions()) + ")";
 																												std::string solver = curStateVariables.getMNodeType() + "_";
 																												// Add Diversity
+																												printf(" 2");
 																												solutionsMap.updateSolution(recordName, "diversity", std::to_string(curStateVariables.getDiversity()));
 																												// Add number of Solutions
+																												printf(" 3");
 																												solutionsMap.updateSolution(recordName, "NumSols", std::to_string(curStateVariables.requestedNumberOfSolutions()));
 																												// Add Time(ms)
+																												printf(" 4");
 																												solutionsMap.updateSolution(recordName, "Time(ms)", std::to_string(curStateVariables.getTimeSpent()));
-
+																												printf(" 5");
 																												solutionsMap.updateSolution(recordName, "Alpha", std::to_string(curStateVariables.alphaValue()));
-
+																												printf(" 6");
 																												solutionsMap.updateSolution(recordName, "Beta", std::to_string(curStateVariables.betaValue()));
-
+																												printf(" 7");
 																												solutionsMap.updateSolution(recordName, "SolCut", std::to_string(curStateVariables.solutioncutoff()));
-
+																												printf(" 8");
 																												solutionsMap.updateSolution(recordName, "DepthCut", std::to_string(curStateVariables.depthcutoff()));
 																												// Add Nodes Processed
+																												printf(" 9");
 																												solutionsMap.updateSolution(recordName, "NodesProcessed", "0");
 																												// Add Node Processing type
+																												printf(" 10");
 																												solutionsMap.updateSolution(recordName, "nodeType", curStateVariables.getMNodeType());
 																												// Add NearOptimal Percent
+																												printf(" 11");
 																												solutionsMap.updateSolution(recordName, "PercentNearOptimal", std::to_string(curStateVariables.percentNearOptimal()));
 																												// Add Number of solutions generated
+																												printf(" 12");
 																												solutionsMap.updateSolution(recordName, "NumberofGeneratedSolutions", std::to_string(curStateVariables.numberSolutionsGenerated()));
-
+																												printf(" 13");
 																												std::cout << "  This is the calculated diversity: " << curStateVariables.getDiversity() << " . It took " << curStateVariables.getTimeSpent() << " secs to compute." << "\n";
-
+																												printf("Ended assignments \n");
 																												if (fileAddCounter == 0)
 																													{
+																														printf("writing first if \n");
 																														resultWriter wr { csvFile, solutionsMap.getSolutionsMap() };
 
 																														//                                std::cout << "This is k: " << k << " This is the headstate0 : " << wr.getHeaderState() << std::endl;
 																														wr.writeDiversity_ToCsv(solutionsMap);
 																														fileAddCounter = 1;
+																														printf("Ended writing first if");
 
 																													}
 																												else
 																													{
+																														printf("writing second if \n");
 																														resultWriter wr { csvFile, solutionsMap.getSolutionsMap(), 2 };
 																														//                                std::cout << "This is k: " << k <<  " This is the headstate2 : " << wr.getHeaderState() << std::endl;
 																														wr.writeDiversity_ToCsv(solutionsMap);
+																														printf("Ended writing second if");
 																													}
 
 																											}// END MAIN SOLVER PROCESS
