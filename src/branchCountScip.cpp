@@ -1101,7 +1101,7 @@ SCIP_RETCODE branchCountScip::phaseTwo(SCIP *scip, /**< SCIP data structure */
 		if (retcode != SCIP_OKAY)
 			{
 				printf("\n Count Failed");
-				SCIPinfoMessage(scip, NULL, "\n Count Failed");
+//				SCIPinfoMessage(scip, NULL, "\n Count Failed");
 			}
 		else
 			{
