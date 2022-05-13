@@ -1156,10 +1156,11 @@ SCIP_RETCODE branchCountScip::runSCIP(solutionStoreVector &generatedSolution)
 				SCIP_CALL(branchCountScip::phaseOne(scip, "countPhaseOne", fName.c_str(), "mps", generatedSolution));
 				curStateVariables.setMObjectiveCalculated(1);
 
+
+				scip = NULL;
+				SCIP_CALL(SCIPcreate(&scip));
 		}
 
-		scip = NULL;
-		SCIP_CALL(SCIPcreate(&scip));
 
 		SCIP_CALL(branchCountScip::phaseTwo(scip, "countPhaseTwo", fName.c_str(), "mps", generatedSolution));
 		//				SCIP_CALL(SCIP_DECL_CONSFREE(scip,consFreeCountsols));
@@ -1180,7 +1181,7 @@ SCIP_RETCODE branchCountScip::runSCIP(solutionStoreVector &generatedSolution)
 		//			}
 
 		scip = NULL;
-		SCIP_CALL(SCIPcreate(&scip));
+//		SCIP_CALL(SCIPcreate(&scip));
 
 		SCIP_CALL(SCIPfree(&scip));
 		BMScheckEmptyMemory();
