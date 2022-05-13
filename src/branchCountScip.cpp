@@ -767,6 +767,12 @@ SCIP_RETCODE branchCountScip::captureSolutions(SCIP *scip, solutionStoreVector &
 									SCIP_CALL(retcode);
 								}
 
+
+							/* free buffer array */
+//							SCIPfreeBufferArray(scip, &sparsesols);
+							SCIPfreeBufferArray(scip, &allvars);
+							SCIPfreeBufferArray(scip, &origvars);
+
 							/* free conshdlrdata */
 							////							conshdlrdata->nsols; /*lint !e545*/
 							//							delete[] &conshdlrdata->nsols;
@@ -1160,6 +1166,7 @@ SCIP_RETCODE branchCountScip::runSCIP(solutionStoreVector &generatedSolution)
 				SCIP_CALL(branchCountScip::phaseOne(scip, "countPhaseOne", fName.c_str(), "mps", generatedSolution));
 				curStateVariables.setMObjectiveCalculated(1);
 
+				SCIP_CALL(SCIPfree(&scip));
 
 				scip = NULL;
 				SCIP_CALL(SCIPcreate(&scip));
