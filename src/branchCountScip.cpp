@@ -769,7 +769,7 @@ SCIP_RETCODE branchCountScip::captureSolutions(SCIP *scip, solutionStoreVector &
 
 
 							/* free buffer array */
-//							SCIPfreeBufferArray(scip, &sparsesols);
+							//							SCIPfreeBufferArray(scip, &sparsesols);
 							SCIPfreeBufferArray(scip, &allvars);
 							SCIPfreeBufferArray(scip, &origvars);
 
@@ -1191,7 +1191,7 @@ SCIP_RETCODE branchCountScip::runSCIP(solutionStoreVector &generatedSolution)
 		//		SCIP_CALL(branchCountScip::phaseTwo(scip, "countPhaseTwo", fName.c_str(), "mps", generatedSolution, currentState));
 		//			}
 
-		scip = NULL;
+		//		scip = NULL;
 		//		SCIP_CALL(SCIPcreate(&scip));
 
 		SCIP_CALL(SCIPfree(&scip));
