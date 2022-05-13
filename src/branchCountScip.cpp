@@ -638,7 +638,7 @@ SCIP_RETCODE branchCountScip::captureSolutions(SCIP *scip, solutionStoreVector &
 						}
 					else if (nsols == 0)
 						{
-//							SCIPdialogMessage(scip, NULL, "there are no counted solutions\n");
+							//							SCIPdialogMessage(scip, NULL, "there are no counted solutions\n");
 							printf("There are no counted solutions - Changed \n");
 						}
 					else if (nsparsesols == 0)
@@ -863,6 +863,8 @@ SCIP_RETCODE branchCountScip::phaseOne(SCIP *scip, /**< SCIP data structure */
 		// Create a basic Problem
 		SCIP_CALL(SCIPcreateProbBasic(scip, variableNameForScip));
 
+		nodeVisited.clear();
+
 		// Set Necessary Parameters
 		//    SCIP_CALL(oneTreePhaseOneParams(scip));
 		/* include default SCIP plugins */
@@ -1045,11 +1047,13 @@ SCIP_RETCODE branchCountScip::phaseTwo(SCIP *scip, /**< SCIP data structure */
 					}
 			}
 
+		printf("\n Completed file reading ");
+
 		// #############################################   SET THE OBJECTIVE BOUND BASED ON Q% #############################################################
 		float ObjBound = curStateVariables.getMBestObjective() + (curStateVariables.getMBestObjective() * curStateVariables.percentNearOptimal());
 		SCIPsetObjlimit(scip, ObjBound);
 
-		//		printf("This is objlimit %f: \n", ObjBound);
+		printf("This is objlimit %f: \n", ObjBound);
 		//
 		//	SCIP_Real objLimit;
 		//	objLimit = SCIPgetObjlimit(scip);
@@ -1071,7 +1075,7 @@ SCIP_RETCODE branchCountScip::phaseTwo(SCIP *scip, /**< SCIP data structure */
 						tmpStr = "Unlimited (time bounded)";
 					}
 
-				printf("Counting %s solutions within %f % of the optimal \n", tmpStr.c_str(), curStateVariables.percentNearOptimal() * 100);
+				printf("Counting %s solutions within %f percent of the optimal \n", tmpStr.c_str(), curStateVariables.percentNearOptimal() * 100);
 				//				std::cout << " Counting " << tmpStr << " solutions within " << qpercent * 100 << "% Of the optimal " << std::endl;
 				SCIP_CALL(SCIPsetLongintParam(scip, "constraints/countsols/sollimit", curStateVariables.requestedNumberOfSolutions()));
 
@@ -1101,7 +1105,7 @@ SCIP_RETCODE branchCountScip::phaseTwo(SCIP *scip, /**< SCIP data structure */
 		if (retcode != SCIP_OKAY)
 			{
 				printf("\n Count Failed");
-//				SCIPinfoMessage(scip, NULL, "\n Count Failed");
+				//				SCIPinfoMessage(scip, NULL, "\n Count Failed");
 			}
 		else
 			{
@@ -1181,7 +1185,7 @@ SCIP_RETCODE branchCountScip::runSCIP(solutionStoreVector &generatedSolution)
 		//			}
 
 		scip = NULL;
-//		SCIP_CALL(SCIPcreate(&scip));
+		//		SCIP_CALL(SCIPcreate(&scip));
 
 		SCIP_CALL(SCIPfree(&scip));
 		BMScheckEmptyMemory();
