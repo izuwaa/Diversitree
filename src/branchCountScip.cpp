@@ -699,9 +699,9 @@ SCIP_RETCODE branchCountScip::captureSolutions(SCIP *scip, solutionStoreVector &
 										}
 								}
 
-							std::cout << " This is numB: " << numB << "\n" << std::endl;
-							std::cout << " This is norigvars: " << norigvars << "\n" << std::endl;
-							std::cout << " This is conshdlrdata->nallvars: " << conshdlrdata->nallvars << "\n" << std::endl;
+//							std::cout << " This is numB: " << numB << "\n" << std::endl;
+//							std::cout << " This is norigvars: " << norigvars << "\n" << std::endl;
+//							std::cout << " This is conshdlrdata->nallvars: " << conshdlrdata->nallvars << "\n" << std::endl;
 
 							assert(norigvars == conshdlrdata->nallvars);
 
@@ -749,8 +749,8 @@ SCIP_RETCODE branchCountScip::captureSolutions(SCIP *scip, solutionStoreVector &
 
 							//TODO remove the below two lines:
 
-							printf("\n This is nsols: %d", nsols);
-							printf("getCountedSolutions: %d", curStateVariables.getMCountedSolutionsSoFar());
+							printf("\n This is nsols: %d and ", nsols);
+							printf(" getCountedSolutions: %d", curStateVariables.getMCountedSolutionsSoFar());
 
 							//							std::cout << "\n This is nsols: " << nsols;
 							//							std::cout << "getCountedSolutions: " << currentState.getMCountedSolutionsSoFar() << std::endl;
@@ -1053,13 +1053,13 @@ SCIP_RETCODE branchCountScip::phaseTwo(SCIP *scip, /**< SCIP data structure */
 					}
 			}
 
-		printf("\n Completed file reading ");
+//		printf("\n Completed file reading ");
 
 		// #############################################   SET THE OBJECTIVE BOUND BASED ON Q% #############################################################
 		float ObjBound = curStateVariables.getMBestObjective() + (curStateVariables.getMBestObjective() * curStateVariables.percentNearOptimal());
 		SCIPsetObjlimit(scip, ObjBound);
 
-		printf("This is objlimit %f: \n", ObjBound);
+//		printf("This is objlimit %f: \n", ObjBound);
 		//
 		//	SCIP_Real objLimit;
 		//	objLimit = SCIPgetObjlimit(scip);
@@ -1098,15 +1098,15 @@ SCIP_RETCODE branchCountScip::phaseTwo(SCIP *scip, /**< SCIP data structure */
 		// #############################################   ######################  ######################################################################
 
 		//    // I need to time this run and add the start time and end time to the current state values.
-		printf("Time Starting \n");
+//		printf("Time Starting \n");
 		curStateVariables.setStartTime(std::chrono::high_resolution_clock::now());
-		printf("Count Starting \n");
+//		printf("Count Starting \n");
 		retcode = SCIPcount(scip);// Required if you want to count solutions
-		printf("Count Ended \n");
+//		printf("Count Ended \n");
 		curStateVariables.setStopTime(std::chrono::high_resolution_clock::now());
-		printf("Time Ended \n");
+//		printf("Time Ended \n");
 		nsols = SCIPgetNCountedSols(scip, &valid);// Required if you want to count solutions
-		printf("Tried to capture nsols here \n");
+//		printf("Tried to capture nsols here \n");
 
 		if (retcode != SCIP_OKAY)
 			{
@@ -1129,9 +1129,9 @@ SCIP_RETCODE branchCountScip::phaseTwo(SCIP *scip, /**< SCIP data structure */
 		// ############################################# START THE NEAR OPTIMAL SOLUTIONS GENERATION PROCESS ###########################################################
 		//	std::cout << SCIP_capture_Solutions(scip, qpercent);
 		//	getAllDiversity(scip);
-		printf("Starting Capture \n");
+//		printf("Starting Capture \n");
 		captureSolutions(scip, generatedSolution);
-		printf("Ended Capture Solutions \n");
+//		printf("Ended Capture Solutions \n");
 
 		// #####################  END: THESE CODES ARE REQUIRED IF YOU WANT TO COUNT THE NUMBER OF SOLUTIONS
 
